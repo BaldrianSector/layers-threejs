@@ -1,71 +1,112 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import GUI from 'lil-gui';
 
+// Create a GUI
+const gui = new GUI();
+
+const planeData = {
+    planes: 7,
+    spacing: 0.6,
+    dimensions: {
+        width: 2.4,
+        height: 0.2,
+        length: 4
+    }
+};
+
+const options = {
+    showGrid: false
+};
+
+// Create a scene
 export function createScene() {
-
     // Create the scene
     const scene = new THREE.Scene();
 
     // Set up the camera
-    const camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
+    const aspect = window.innerWidth / window.innerHeight;
+    const camera = new THREE.OrthographicCamera(
+        -aspect * 5, aspect * 5, 5, -5, 0.1, 1000
     );
-    camera.position.z = 5;
+
+    // Set the camera position
+    camera.position.set(3, 3, 5);
+    camera.lookAt(0, 0, 0);
 
     // Create the renderer and attach it to the document
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Create a cube
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        wireframe: true,
-    });
+    // Array to store plane meshes
+    let planesArray = [];
+    let gridHelper = null; // Store grid reference
 
-    let planes = 11;
+    // Function to update planes dynamically
+    function updatePlanes() {
+        // Remove existing planes from the scene
+        planesArray.forEach(plane => scene.remove(plane));
+        planesArray = [];
 
-    for (let i = 0; i < planes; i++) {
-        const newGeometry = new THREE.BoxGeometry(1.2, 0.1, 2); // Make the cube rectangular
-    
-        // Compute a gray value ranging from 0 (black) to 1 (white)
-        let gray = i / (planes - 1);
-        const color = new THREE.Color(gray, gray, gray);
-    
-        const material = new THREE.MeshBasicMaterial({ color: color });
-    
-        const newPlane = new THREE.Mesh(newGeometry, material);
-        newPlane.position.y = -2.5 + i * 0.5;
-        scene.add(newPlane);
+        // Calculate starting position to keep planes centered
+        const totalHeight = (planeData.planes - 1) * planeData.spacing;
+        const startY = -totalHeight / 2;
+
+        // Create new planes based on planeData.planes and spacing
+        for (let i = 0; i < planeData.planes; i++) {
+            const newGeometry = new THREE.BoxGeometry(
+                planeData.dimensions.width,
+                planeData.dimensions.height,
+                planeData.dimensions.length
+            );
+            let gradient = 0.1 + (i / (planeData.planes - 1)) * 0.9;
+            const color = new THREE.Color(gradient, gradient, gradient);
+            const material = new THREE.MeshBasicMaterial({ color: color });
+
+            const newPlane = new THREE.Mesh(newGeometry, material);
+            newPlane.position.y = startY + i * planeData.spacing; // Dynamic spacing
+            scene.add(newPlane);
+            planesArray.push(newPlane);
+        }
     }
 
-    // draw a line down the center of the scene
+    // Function to update grid visibility
+    function updateGrid() {
+        if (gridHelper) {
+            scene.remove(gridHelper); // Remove existing grid
+            gridHelper = null;
+        }
 
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
-    const points = [];
-    points.push(new THREE.Vector3(0, - 2.5, 0));
-    points.push(new THREE.Vector3(0, 2.5, 0));
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-    const line = new THREE.Line(lineGeometry, lineMaterial);
-    scene.add(line);
+        if (options.showGrid) {
+            gridHelper = new THREE.GridHelper(10, 10, 0x0000ff, 0x808080);
+            gridHelper.position.y = 0.1;
+            scene.add(gridHelper);
+        }
+    }
 
-    // add OrbitControls
-    
+    // GUI Controls
+    const planeFolder = gui.addFolder('Plane Settings');
+    planeFolder.add(planeData, 'planes', 1, 100, 1).onChange(updatePlanes);
+    planeFolder.add(planeData, 'spacing', 0.1, 2, 0.01).onChange(updatePlanes);
+    planeFolder.add(planeData.dimensions, 'width', 0.1, 2, 0.1).onChange(updatePlanes);
+    planeFolder.add(planeData.dimensions, 'height', 0.1, 2, 0.1).onChange(updatePlanes);
+    planeFolder.add(planeData.dimensions, 'length', 0.1, 2, 0.1).onChange(updatePlanes);
+    planeFolder.open();
+
+    gui.add(options, 'showGrid').name('Show Grid').onChange(updateGrid);
+
+    // Initial setup
+    updatePlanes();
+    updateGrid();
+
+    // Add OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    
+
     // Animation loop
     function animate() {
         requestAnimationFrame(animate);
-
-        // Rotate the cube for some basic animation
-        // cube.rotation.x += 0.01;
-        // cube.rotation.y += 0.01;
-
         renderer.render(scene, camera);
     }
     animate();
@@ -76,5 +117,4 @@ export function createScene() {
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
-
 }
