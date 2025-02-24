@@ -100,18 +100,21 @@ export function createScene() {
             );
 
             let material;
-            if (planeData.useTexture) {
-                material = new THREE.MeshBasicMaterial({ map: planeTextures[i] });
+            if (planeData.useTexture) {            
+                material = new THREE.MeshBasicMaterial({ 
+                    map: planeTextures[i],
+                    side: THREE.DoubleSide // Optional: if you need the texture on both sides
+                });
             } else {
                 let gradient = 0.1 + (i / (planeData.planes - 1)) * 0.9;
                 const color = new THREE.Color(gradient, gradient, gradient);
                 material = new THREE.MeshBasicMaterial({ color: color });
             }
-
+            
             const newPlane = new THREE.Mesh(newGeometry, material);
             newPlane.position.y = startY + i * planeData.spacing; // Dynamic spacing
             scene.add(newPlane);
-            planesArray.push(newPlane);
+            planesArray.push(newPlane);            
         }
     }
 
