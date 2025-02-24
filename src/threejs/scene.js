@@ -21,7 +21,7 @@ const planeData = {
     },
     depthScale: 0.1,
     useTexture: true,
-    useDisplacement: true
+    useDisplacement: false
 };
 
 const options = {
