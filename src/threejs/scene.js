@@ -27,32 +27,19 @@ export function createScene() {
         wireframe: true,
     });
 
+    let planes = 11;
+
+    for (let i = 0; i < planes; i++) {
+        const newGeometry = new THREE.BoxGeometry(1.2, 0.1, 2); // Make the cube rectangular
     
-
-    // const cube = new THREE.Mesh(geometry, material);
-    // scene.add(cube);
-
-    // cube.rotateX(0.5);
-    // cube.rotateY(0.5);
-
-    // add 10 planes
-
-    for (let i = 0; i < 11; i++) {
-
-        const newGeometry = new THREE.BoxGeometry(1, 0.1, 2); // Make the cube rectangular
-        // set texture of geometry to random color
-        
-
-        
-        const material = new THREE.MeshBasicMaterial({ color : Math.random() * 0xffffff });
-
-
+        // Compute a gray value ranging from 0 (black) to 1 (white)
+        let gray = i / (planes - 1);
+        const color = new THREE.Color(gray, gray, gray);
+    
+        const material = new THREE.MeshBasicMaterial({ color: color });
+    
         const newPlane = new THREE.Mesh(newGeometry, material);
-        // newCube.position.x = Math.random() * 10 - 5;
-        newPlane.position.y = - 2.5 + i * 0.5;
-        // newCube.position.z = Math.random() * 10 - 5;
-        // newCube.rotation.x = 0.5;
-        // newCube.rotation.y = 0.5;
+        newPlane.position.y = -2.5 + i * 0.5;
         scene.add(newPlane);
     }
 
