@@ -14,7 +14,14 @@ const planeData = {
         height: 0.2,
         length: 4
     },
-    useTexture: true
+    segments: {
+        width: 10,
+        height: 10,
+        length: 10
+    },
+    depthScale: 0.1,
+    useTexture: true,
+    useDisplacement: true
 };
 
 const options = {
@@ -96,18 +103,26 @@ export function createScene() {
             const newGeometry = new THREE.BoxGeometry(
                 planeData.dimensions.width,
                 planeData.dimensions.height,
-                planeData.dimensions.length
+                planeData.dimensions.length,
+                planeData.segments.width,
+                planeData.segments.height,
+                planeData.segments.length                
             );
 
             let material;
             if (planeData.useTexture) {
-                material = new THREE.MeshPhongMaterial({
+                let materialOptions = {
                     map: planeTextures[i].texture,
                     side: THREE.DoubleSide,
-                    transparent: true,
-                    // displacementMap: planeTextures[i].texture,
-                    // displacementScale: 0.1
-                });
+                    transparent: true
+                };
+            
+                if (planeData.useDisplacement) {
+                    materialOptions.displacementMap = planeTextures[i].texture;
+                    materialOptions.displacementScale = planeData.depthScale;
+                }
+            
+                material = new THREE.MeshPhongMaterial(materialOptions);            
             } else {
                 let gradient = 0.1 + (i / (planeData.planes - 1)) * 0.9;
                 const color = new THREE.Color(gradient, gradient, gradient);
@@ -161,12 +176,28 @@ export function createScene() {
         }
     }
 
+
+    // GUI
     gui.add(planeData, 'planes', 1, 100, 1).onChange(updatePlanes);
     gui.add(planeData, 'spacing', 0.1, 2, 0.01).onChange(updatePlanes);
-    gui.add(planeData.dimensions, 'width', 0.1, 2, 0.1).onChange(updatePlanes);
-    gui.add(planeData.dimensions, 'height', 0.1, 2, 0.1).onChange(updatePlanes);
-    gui.add(planeData.dimensions, 'length', 0.1, 2, 0.1).onChange(updatePlanes);
+    
+    const dimensionsFolder = gui.addFolder('Dimensions');
+
+    dimensionsFolder.add(planeData.dimensions, 'width', 0.1, 2, 0.1).onChange(updatePlanes);
+    dimensionsFolder.add(planeData.dimensions, 'height', 0.1, 2, 0.1).onChange(updatePlanes);
+    dimensionsFolder.add(planeData.dimensions, 'length', 0.1, 2, 0.1).onChange(updatePlanes);
+
+    const segmentsFolder = gui.addFolder('Segments');
+
+    segmentsFolder.add(planeData.segments, 'width', 1, 100, 1).onChange(updatePlanes);
+    segmentsFolder.add(planeData.segments, 'height', 1, 100, 1).onChange(updatePlanes);
+    segmentsFolder.add(planeData.segments, 'length', 1, 100, 1).onChange(updatePlanes);
+    
     gui.add(planeData, 'useTexture').name('Use Texture').onChange(updatePlanes);
+    gui.add(planeData, 'useDisplacement').name('Use Displacement').onChange(updatePlanes);
+
+
+
     gui.add(options, 'showGrid').name('Show Grid').onChange(updateGrid);
 
     updatePlanes();
