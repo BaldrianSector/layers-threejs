@@ -52,6 +52,11 @@ export function createScene() {
     camera.position.set(3, 3, 5);
     camera.lookAt(0, 0, 0);
 
+    // Ambient light
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+    scene.add(ambientLight);
+
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
@@ -96,10 +101,12 @@ export function createScene() {
 
             let material;
             if (planeData.useTexture) {
-                material = new THREE.MeshBasicMaterial({
+                material = new THREE.MeshPhongMaterial({
                     map: planeTextures[i].texture,
                     side: THREE.DoubleSide,
-                    transparent: true
+                    transparent: true,
+                    // displacementMap: planeTextures[i].texture,
+                    // displacementScale: 0.1
                 });
             } else {
                 let gradient = 0.1 + (i / (planeData.planes - 1)) * 0.9;
@@ -143,7 +150,7 @@ export function createScene() {
 
             planesArray.forEach(plane => {
                 if (plane !== hoveredPlane) {
-                    plane.material.opacity = 0.5;
+                    plane.material.opacity = 0.3;
                 } else {
                     plane.material.opacity = 1;
                 }
