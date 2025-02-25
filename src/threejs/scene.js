@@ -1,33 +1,15 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import GUI from 'lil-gui';
+import data from './initialState.json';
 
 // Create a GUI
 const gui = new GUI();
 
-// Data for planes
-const planeData = {
-    planes: 7,
-    spacing: 0.6,
-    dimensions: {
-        width: 2.4,
-        height: 0.2,
-        length: 4
-    },
-    segments: {
-        width: 10,
-        height: 10,
-        length: 10
-    },
-    depthScale: 0.1,
-    useTexture: true,
-    useDisplacement: false
-};
+// Import initial data
 
-const options = {
-    showGrid: true,
-    backgroundColor: 'C4C5C9'
-};
+const planeData = data.planeData;
+const options = data.options;
 
 // Texture paths
 const textureLoader = new THREE.TextureLoader();
