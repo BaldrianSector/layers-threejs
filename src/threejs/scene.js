@@ -197,7 +197,10 @@ export function createScene() {
     segmentsFolder.add(planeData.segments, 'length', 1, 100, 1).onChange(updatePlanes);
     
     gui.add(planeData, 'useTexture').name('Use Texture').onChange(updatePlanes);
-    gui.add(planeData, 'useDisplacement').name('Use Displacement').onChange(updatePlanes);    
+    gui.add(planeData, 'useDisplacement').name('Use Displacement').onChange(updatePlanes);
+    // depthscale
+    gui.add(planeData, 'depthScale', 0.1, 1, 0.1).onChange(updatePlanes);
+    
     gui.add(options, 'showGrid').name('Show Grid').onChange(updateGrid);
     
     // gui for background color
