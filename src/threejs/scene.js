@@ -25,7 +25,8 @@ const planeData = {
 };
 
 const options = {
-    showGrid: true
+    showGrid: true,
+    backgroundColor: 'C4C5C9'
 };
 
 // Texture paths
@@ -58,6 +59,8 @@ export function createScene() {
     );
     camera.position.set(3, 3, 5);
     camera.lookAt(0, 0, 0);
+
+    scene.background = new THREE.Color(options.backgroundColor); // Light blue
 
     // Ambient light
 
@@ -194,11 +197,15 @@ export function createScene() {
     segmentsFolder.add(planeData.segments, 'length', 1, 100, 1).onChange(updatePlanes);
     
     gui.add(planeData, 'useTexture').name('Use Texture').onChange(updatePlanes);
-    gui.add(planeData, 'useDisplacement').name('Use Displacement').onChange(updatePlanes);
-
-
-
+    gui.add(planeData, 'useDisplacement').name('Use Displacement').onChange(updatePlanes);    
     gui.add(options, 'showGrid').name('Show Grid').onChange(updateGrid);
+    
+    // gui for background color
+    gui.addColor(options, 'backgroundColor').name('Background Color').onChange((color) => {
+        scene.background
+            .set(color);
+    }
+    );
 
     updatePlanes();
     updateGrid();
