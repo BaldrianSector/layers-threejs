@@ -1,29 +1,21 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import GUI from 'lil-gui';
-import data from './initialState.json';
+import initialState from './initialState.json';
+import textureArray from './textureArray.json';
 
 // Create a GUI
 const gui = new GUI();
 
 // Import initial data
 
-const planeData = data.planeData;
-const options = data.options;
+const planeData = initialState.planeData;
+const options = initialState.options;
 
 // Texture paths
 const textureLoader = new THREE.TextureLoader();
 const textureCache = new Map();
-const texturePaths = [
-    'src/assets/textures/lines.png',
-    'src/assets/textures/snow-ground-water.jpg',
-    'src/assets/textures/snow.jpg',
-    'src/assets/textures/stone.png',
-    'src/assets/textures/structure.png',
-    'src/assets/textures/topographic-map.avif',
-    'src/assets/textures/topographic.webp',
-    'src/assets/textures/topography-map-white.avif'
-];
+const texturePaths = textureArray;
 
 function getTexture(path) {
     if (!textureCache.has(path)) {
@@ -205,9 +197,14 @@ export function createScene() {
     animate();
 
     window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        const aspect = window.innerWidth / window.innerHeight;
+        camera.left = -aspect * 5;
+        camera.right = aspect * 5;
+        camera.top = 5;
+        camera.bottom = -5;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
+
     });
 
     window.addEventListener('mousemove', onMouseMove);

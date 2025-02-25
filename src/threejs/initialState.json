@@ -18,6 +18,6 @@
     },
     "options": {
         "showGrid": false,
-        "backgroundColor": "C4C5C9"
+        "backgroundColor": "#C4C5C9"
     }
 }
