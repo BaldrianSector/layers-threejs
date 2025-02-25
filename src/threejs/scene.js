@@ -28,6 +28,8 @@ function getTexture(path) {
 export function createScene() {
     const scene = new THREE.Scene();
     const aspect = window.innerWidth / window.innerHeight;
+    
+    // Create camera
     const camera = new THREE.OrthographicCamera(
         -aspect * 5, aspect * 5, 5, -5, 0.1, 1000
     );
@@ -37,10 +39,10 @@ export function createScene() {
     scene.background = new THREE.Color(options.backgroundColor); // Light blue
 
     // Ambient light
-
     const ambientLight = new THREE.AmbientLight(0xffffff, 3);
     scene.add(ambientLight);
 
+    // Create renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
