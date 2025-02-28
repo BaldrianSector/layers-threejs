@@ -1,21 +1,15 @@
 import * as THREE from 'three';
+import data from './data.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import GUI from 'lil-gui';
-import initialState from './initialState.json';
-import textureArray from './textureArray.json';
+import { setupGUI } from './gui.js';
 
-// Create a GUI
-const gui = new GUI();
-
-// Import initial data
-
-const planeData = initialState.planeData;
-const options = initialState.options;
+// Deconstruct data object
+const { planeData, textureData, options } = data;
 
 // Texture paths
 const textureLoader = new THREE.TextureLoader();
 const textureCache = new Map();
-const texturePaths = textureArray;
+const texturePaths = textureData.paths;
 
 function getTexture(path) {
     if (!textureCache.has(path)) {
@@ -46,6 +40,9 @@ export function createScene() {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
+
+    // GUI
+    setupGUI(scene, updatePlanes, updateGrid);
 
     let planesArray = [];
     let gridHelper = null;
@@ -154,38 +151,7 @@ export function createScene() {
             planesArray.forEach(plane => (plane.material.opacity = 1));
         }
     }
-
-
-    // GUI
-    gui.add(planeData, 'planes', 1, 100, 1).onChange(updatePlanes);
-    gui.add(planeData, 'spacing', 0.1, 2, 0.01).onChange(updatePlanes);
     
-    const dimensionsFolder = gui.addFolder('Dimensions');
-
-    dimensionsFolder.add(planeData.dimensions, 'width', 0.1, 2, 0.1).onChange(updatePlanes);
-    dimensionsFolder.add(planeData.dimensions, 'height', 0.1, 2, 0.1).onChange(updatePlanes);
-    dimensionsFolder.add(planeData.dimensions, 'length', 0.1, 2, 0.1).onChange(updatePlanes);
-
-    const segmentsFolder = gui.addFolder('Segments');
-
-    segmentsFolder.add(planeData.segments, 'width', 1, 100, 1).onChange(updatePlanes);
-    segmentsFolder.add(planeData.segments, 'height', 1, 100, 1).onChange(updatePlanes);
-    segmentsFolder.add(planeData.segments, 'length', 1, 100, 1).onChange(updatePlanes);
-    
-    gui.add(planeData, 'useTexture').name('Use Texture').onChange(updatePlanes);
-    gui.add(planeData, 'useDisplacement').name('Use Displacement').onChange(updatePlanes);
-    // depthscale
-    gui.add(planeData, 'depthScale', 0.1, 1, 0.1).onChange(updatePlanes);
-    
-    gui.add(options, 'showGrid').name('Show Grid').onChange(updateGrid);
-    
-    // gui for background color
-    gui.addColor(options, 'backgroundColor').name('Background Color').onChange((color) => {
-        scene.background
-            .set(color);
-    }
-    );
-
     updatePlanes();
     updateGrid();
 
@@ -206,7 +172,6 @@ export function createScene() {
         camera.bottom = -5;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-
     });
 
     window.addEventListener('mousemove', onMouseMove);
