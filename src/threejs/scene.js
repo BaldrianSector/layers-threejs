@@ -2,18 +2,29 @@ import * as THREE from 'three';
 import data from './data.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { setupGUI } from './gui.js';
+import { createCamera } from './camera.js';
+import { handleResize } from './resizeHandler.js';
 
 // Deconstruct data object
 const { planeData, textureData, options } = data;
 
-// Texture paths
+// Texture loader and caching
 const textureLoader = new THREE.TextureLoader();
+textureLoader.setCrossOrigin('anonymous');
 const textureCache = new Map();
-const texturePaths = textureData.paths;
 
 function getTexture(path) {
+    if (!path) {
+        console.error('Texture path is undefined');
+        return null;
+    }
     if (!textureCache.has(path)) {
-        textureCache.set(path, textureLoader.load(path));
+        const texture = textureLoader.load(
+            path,
+            undefined,
+            (error) => { console.error(`Error loading texture: ${path}`, error); }
+        );
+        textureCache.set(path, texture);
     }
     return textureCache.get(path);
 }
@@ -24,11 +35,7 @@ export function createScene() {
     const aspect = window.innerWidth / window.innerHeight;
     
     // Create camera
-    const camera = new THREE.OrthographicCamera(
-        -aspect * 5, aspect * 5, 5, -5, 0.1, 1000
-    );
-    camera.position.set(3, 3, 5);
-    camera.lookAt(0, 0, 0);
+    const camera = createCamera(aspect);
 
     scene.background = new THREE.Color(options.backgroundColor); // Light blue
 
@@ -41,138 +48,81 @@ export function createScene() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // GUI
-    setupGUI(scene, updatePlanes, updateGrid);
-
-    let planesArray = [];
-    let gridHelper = null;
-    let planeTextures = [];
-
-    // Create text element for hover info
-    const hoverText = document.createElement('div');
-    hoverText.style.position = 'absolute';
-    hoverText.style.color = 'white';
-    hoverText.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-    hoverText.style.padding = '5px';
-    hoverText.style.display = 'none';
-    document.body.appendChild(hoverText);
-
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
-
-    function updatePlanes() {
-        planesArray.forEach(plane => scene.remove(plane));
-        planesArray = [];
-
-        while (planeTextures.length < planeData.planes) {
-            const randomTexturePath = texturePaths[Math.floor(Math.random() * texturePaths.length)];
-            planeTextures.push({ texture: getTexture(randomTexturePath), path: randomTexturePath });
-        }
-        while (planeTextures.length > planeData.planes) {
-            planeTextures.pop();
-        }
-
-        const totalHeight = (planeData.planes - 1) * planeData.spacing;
-        const startY = -totalHeight / 2;
-
-        for (let i = 0; i < planeData.planes; i++) {
-            const newGeometry = new THREE.BoxGeometry(
-                planeData.dimensions.width,
-                planeData.dimensions.height,
-                planeData.dimensions.length,
-                planeData.segments.width,
-                planeData.segments.height,
-                planeData.segments.length                
-            );
-
-            let material;
-            if (planeData.useTexture) {
-                let materialOptions = {
-                    map: planeTextures[i].texture,
-                    side: THREE.DoubleSide,
-                    transparent: true
-                };
-            
-                if (planeData.useDisplacement) {
-                    materialOptions.displacementMap = planeTextures[i].texture;
-                    materialOptions.displacementScale = planeData.depthScale;
-                }
-            
-                material = new THREE.MeshPhongMaterial(materialOptions);            
-            } else {
-                let gradient = 0.1 + (i / (planeData.planes - 1)) * 0.9;
-                const color = new THREE.Color(gradient, gradient, gradient);
-                material = new THREE.MeshBasicMaterial({ color: color, transparent: true });
-            }
-
-            const newPlane = new THREE.Mesh(newGeometry, material);
-            newPlane.position.y = startY + i * planeData.spacing;
-            newPlane.userData.texturePath = planeTextures[i]?.path || 'Color';
-            scene.add(newPlane);
-            planesArray.push(newPlane);
-        }
-    }
-
-    function updateGrid() {
-        if (gridHelper) {
-            scene.remove(gridHelper);
-            gridHelper = null;
-        }
-        if (options.showGrid) {
-            gridHelper = new THREE.GridHelper(10, 10, 0x0000ff, 0x808080);
-            gridHelper.position.y = 0.1;
-            scene.add(gridHelper);
-        }
-    }
-
-    function onMouseMove(event) {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(planesArray);
-
-        if (intersects.length > 0) {
-            const hoveredPlane = intersects[0].object;
-            hoverText.innerText = hoveredPlane.userData.texturePath;
-            hoverText.style.left = `${event.clientX + 10}px`;
-            hoverText.style.top = `${event.clientY + 10}px`;
-            hoverText.style.display = 'block';
-
-            planesArray.forEach(plane => {
-                if (plane !== hoveredPlane) {
-                    plane.material.opacity = 0.3;
-                } else {
-                    plane.material.opacity = 1;
-                }
-            });
-        } else {
-            hoverText.style.display = 'none';
-            planesArray.forEach(plane => (plane.material.opacity = 1));
-        }
-    }
-    
-    updatePlanes();
-    updateGrid();
-
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+
+    // Create group for objects
+    const group = new THREE.Group();
+
+    let groupData = {
+        spacingY: 1.5,
+        spacingX: 0,
+        spacingZ: 0,
+        scale: 1,
+        rotation: 0,
+    };
+
+    // Create planes
+    planeData.planes.forEach((plane) => {
+        const texture = getTexture(plane.texture);
+        if (!texture) {
+            console.error(`Texture for path ${plane.texture} could not be loaded.`);
+            return;
+        }
+
+        const materialOptions = { map: texture, transparent: true };
+
+        // Optionally add displacement map if enabled in planeData
+        if (planeData.useDisplacement) {
+            const displacementTexture = getTexture(plane.displacement);
+            if (displacementTexture) {
+                materialOptions.displacementMap = displacementTexture;
+            }
+        }
+
+        const material = new THREE.MeshPhongMaterial(materialOptions);
+        const geometry = new THREE.PlaneGeometry(planeData.dimensions. width, planeData.dimensions.length);
+        material.side = THREE.DoubleSide;
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.rotateX(Math.PI / 2);
+        group.add(mesh);
+    });
+
+    // Create sphere
+    const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+    const sphereMaterial = new THREE.MeshBasicMaterial({ wireframe: true });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    group.add(sphere);
+
+    scene.add(group);
 
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
+
+        // Apply spacing to X, Y, and Z axes
+        spaceElements(group, 'x', groupData.spacingX);
+        spaceElements(group, 'y', groupData.spacingY);
+        spaceElements(group, 'z', groupData.spacingZ);
+
+        // Update group's scale and rotation based on groupData
+        group.scale.set(groupData.scale, groupData.scale, groupData.scale);
+        group.rotation.y = groupData.rotation;
     }
+
     animate();
+    handleResize(camera, renderer);
 
-    window.addEventListener('resize', () => {
-        const aspect = window.innerWidth / window.innerHeight;
-        camera.left = -aspect * 5;
-        camera.right = aspect * 5;
-        camera.top = 5;
-        camera.bottom = -5;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+    // GUI
+    setupGUI(scene, groupData, camera, renderer);
+}
+
+// Helper Functions
+
+// Function to space out elements along a given axis
+function spaceElements(group, axis, spacing) {
+    const offset = (group.children.length - 1) * spacing / 2;
+    group.children.forEach((child, index) => {
+        child.position[axis] = index * spacing - offset;
     });
-
-    window.addEventListener('mousemove', onMouseMove);
 }

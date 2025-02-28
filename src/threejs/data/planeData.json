@@ -1,6 +1,32 @@
 {
-  "planes": 7,
-  "spacing": 0.6,
+  "planes": [
+    {
+      "name": "plane1",
+      "number": 1,
+      "texture": "src/assets/textures/snow-ground-water.jpg",
+      "displacement": "src/assets/textures/snow-ground-water.jpg"
+    },
+    {
+      "name": "plane2",
+      "number": 2,
+      "texture": "src/assets/textures/stone.png",
+      "displacement": "src/assets/textures/stone.png"
+    },
+    {
+      "name": "plane3",
+      "number": 3,
+      "texture": "src/assets/textures/structure.png",
+      "displacement": "src/assets/textures/structure.png"
+    },
+    {
+      "name": "plane4",
+      "number": 4,
+      "texture": "src/assets/textures/topography-transparrent.png",
+      "displacement": "src/assets/textures/topography-transparrent.png"
+    }
+
+  ],
+  
   "dimensions": {
     "width": 2.4,
     "height": 0.2,
@@ -11,6 +37,7 @@
     "height": 10,
     "length": 10
   },
+
   "depthScale": 0.1,
   "useTexture": true,
   "useDisplacement": false
