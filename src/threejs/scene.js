@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { setupGUI } from './gui.js';
 import { createCamera } from './camera.js';
 import { handleResize } from './resizeHandler.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // Deconstruct data object
 const { planeData, textureData, options } = data;
@@ -94,6 +95,15 @@ export function createScene() {
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     group.add(sphere);
 
+    // Create custom 3d object from src/assets/3d_models/mountain.glb
+    const loader = new GLTFLoader();
+    loader.load('src/assets/3d_models/grid.glb', (gltf) => {
+        gltf.scene.scale.set(1, 1, 1);
+        // rotate 90 degrees
+        gltf.scene.rotation.y = Math.PI / 2;
+        group.add(gltf.scene);
+    });
+
     scene.add(group);
 
     function animate() {
@@ -109,6 +119,7 @@ export function createScene() {
         group.scale.set(groupData.scale, groupData.scale, groupData.scale);
         group.rotation.y = groupData.rotation;
     }
+
 
     animate();
     handleResize(camera, renderer);
