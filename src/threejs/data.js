@@ -2,6 +2,7 @@ import planeData from './data/planeData.json';
 import textureData from './data/texturePaths.json';
 import cameraData from './data/cameraData.json';
 import options from './data/options.json';
+import stack from './data/stackData.json';
 import fonts from './data/fonts.json';
 import colors from './data/colors.json';
 
@@ -11,7 +12,8 @@ const state = {
     cameraData,
     options,
     fonts,
-    colors
+    colors,
+    stack
 };
 
 export default state;

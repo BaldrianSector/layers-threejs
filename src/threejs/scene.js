@@ -9,7 +9,7 @@ import { createTextMesh, createHeaderTextMesh } from './createTextMesh.js';
 
 
 // Deconstruct data object
-const { planeData, textureData, options, fonts, colors } = data;
+const { planeData, textureData, options, fonts, colors, stack } = data;
 
 // Texture loader and caching
 const textureLoader = new THREE.TextureLoader();
@@ -57,13 +57,7 @@ export function createScene() {
     // Create group for objects
     const group = new THREE.Group();
 
-    let groupData = {
-        spacingY: 1.5,
-        spacingX: 0,
-        spacingZ: 0,
-        scale: 1,
-        rotation: 0,
-    };
+    const groupData = stack;
 
     // Create planes
     planeData.planes.forEach((plane) => {
