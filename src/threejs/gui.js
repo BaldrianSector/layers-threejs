@@ -2,7 +2,7 @@ import GUI from 'lil-gui';
 import data from './data.js';
 
 // Deconstruct data object
-const { planeData, textureData, options } = data;
+const { planeData, textureData, options, colors} = data;
 
 export function setupGUI(scene, groupData) {
     const gui = new GUI();
@@ -15,7 +15,7 @@ export function setupGUI(scene, groupData) {
 
     groupFolder.open();
 
-    gui.addColor(options, 'backgroundColor')
+    gui.addColor(colors, 'backgroundColor')
         .name('Background Color')
-        .onChange(() => scene.background.set(options.backgroundColor));
+        .onChange(() => scene.background.set(colors.backgroundColor));
 }
