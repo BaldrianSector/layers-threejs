@@ -10,7 +10,7 @@ export function setupGUI(scene, groupData) {
     const groupFolder = gui.addFolder('Group Settings');
     
     Object.keys(groupData).forEach(prop => {
-        groupFolder.add(groupData, prop, 0, 10, 0.01).listen();
+        groupFolder.add(groupData, prop, -5, 5, 0.01).listen();
     });
 
     groupFolder.open();
