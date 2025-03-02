@@ -122,6 +122,8 @@ export function createScene() {
     createHeaderTextMesh(group, 'Greenland', 0.5, 0.1, 0.01, true);
     
     // Create a dashed line
+
+    // For now this is just a fixed line between two points, but it should scale with the text and target object
     const dashedMaterial = new THREE.LineDashedMaterial( { color: 0xffffff, dashSize: 0.1, gapSize: 0.1 } )
     const points = [];
     points.push(new THREE.Vector3(0, 0, -2));

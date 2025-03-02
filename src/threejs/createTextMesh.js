@@ -94,7 +94,7 @@ export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth
         const textMaterial = new THREE.MeshPhongMaterial();
         const textMesh = new THREE.Mesh(textGeometry, textMaterial);
 
-        // For example, rotate 90 degrees about Y-axis
+        // Rotate 90 degrees about Y-axis
         textMesh.rotateY(Math.PI / 2);
 
         // Set the position of the text mesh
