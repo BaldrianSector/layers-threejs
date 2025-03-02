@@ -5,9 +5,7 @@ import { setupGUI } from './gui.js';
 import { createCamera } from './camera.js';
 import { handleResize } from './resizeHandler.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { TTFLoader } from 'three/examples/jsm/Addons.js';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { createTextMesh, createHeaderTextMesh } from './createTextMesh.js';
 
 
 // Deconstruct data object
@@ -91,14 +89,14 @@ export function createScene() {
         const mesh = new THREE.Mesh(geometry, material);
         mesh.rotateX(Math.PI / 2);
 
-        group.add(mesh);
+        // group.add(mesh);
     });
 
     // Create sphere
     const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
     const sphereMaterial = new THREE.MeshBasicMaterial({ wireframe: true });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    group.add(sphere);
+    // group.add(sphere);
 
     // Create custom 3d object from src/assets/3d_models/mountain.glb
     const loader = new GLTFLoader();
@@ -119,63 +117,17 @@ export function createScene() {
 
         layer.add(gltf.scene);
             
-        group.add(layer);
+        // group.add(layer);
     });
-
-    // Create text
-    const fontLoader = new FontLoader();
-    fontLoader.load(
-        'node_modules/three/examples/fonts/droid/droid_serif_regular.typeface.json',
-        (droidFont) => {
-            const textGeometry = new TextGeometry('three.js', {
-                size: 1,
-                height: 0.1,
-                depth: 0.01,
-                font: droidFont,
-            });
-
-            // Compute bounding box and center the geometry
-            textGeometry.computeBoundingBox();
-            textGeometry.center();
-
-            const textMaterial = new THREE.MeshNormalMaterial();
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            
-            textMesh.rotateY(Math.PI / 2);
-
-            group.add(textMesh);
-        }
-    );
 
     // Create text with custom font
+    createTextMesh(group, 'Minerals of global interest', 0.1, 0.1, 0.01, 100, false);
+    createTextMesh(group, 'Greenland has a variety of minerals that are of global interest.', 0.1, 0.1, 0.01, 900, false);
+    createTextMesh(group, 'Some italic text would look like this', 0.1, 0.1, 0.01, 500, true);
 
-    // part 2 - true type font loader
-    const ttfLoader = new TTFLoader();
-
-    ttfLoader.load('src/assets/fonts/Covered_By_Your_Grace/CoveredByYourGrace-Regular.ttf', (json) => {
-        // First parse the font.
-        const coveredByYourGrace = fontLoader.parse(json);
-        // Use parsed font as normal.
-        const textGeometry = new TextGeometry('Greenland', {
-        size: 1,
-        height: 0.1,
-        depth: 0.01,
-        font: coveredByYourGrace,
-        });
-
-        const textMaterial = new THREE.MeshNormalMaterial();
-        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-
-        // Compute bounding box and center the geometry
-        textGeometry.computeBoundingBox();
-        textGeometry.center();
-        
-        textMesh.rotateY(Math.PI / 2);
-
-        group.add(textMesh);
-    });
+    // Create text with a different font
+    createHeaderTextMesh(group, 'Greenland', 0.5, 0.1, 0.01, true);
     
-
     scene.add(group);
 
     function animate() {
