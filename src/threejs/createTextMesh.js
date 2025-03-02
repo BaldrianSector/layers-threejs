@@ -100,12 +100,6 @@ export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth
         // Set the position of the text mesh
         textMesh.position.set(position.x, position.y, position.z);
 
-        // calculate the bounding box of the text geometry
-        textGeometry.computeBoundingBox();
-        
-        // log the bounding box to the console
-        console.log(textGeometry.boundingBox);
-
         group.add(textMesh);
     });
 }

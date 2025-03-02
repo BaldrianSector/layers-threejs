@@ -6,6 +6,12 @@ import { createCamera } from './camera.js';
 import { handleResize } from './resizeHandler.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { createTextMesh, createHeaderTextMesh } from './createTextMesh.js';
+import { gsap } from "gsap";    
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { TextPlugin } from "gsap/TextPlugin";
+
+gsap.registerPlugin(ScrollTrigger,ScrollToPlugin,TextPlugin);
 
 // Deconstruct data object
 const { planeData, textureData, options, fonts, colors, stack } = data;
@@ -155,12 +161,11 @@ export function createScene() {
         group.rotation.y = groupData.rotation;
     }
 
-
     animate();
     handleResize(camera, renderer);
 
     // GUI
-    setupGUI(scene, groupData, camera, renderer);
+    setupGUI(scene, groupData, camera, renderer, setSpacingZ);
 }
 
 // Helper Functions
@@ -171,4 +176,16 @@ function spaceElements(group, axis, spacing) {
     group.children.forEach((child, index) => {
         child.position[axis] = index * spacing - offset;
     });
+}
+
+// Set spacingZ to 2 with gsap animation
+function setSpacingZ() {
+    gsap.to(stack, { spacingZ: 2, duration: 1 });
+}
+
+
+// Reset camera position
+function resetCamera() {
+    // reset camera position
+    gsap.to(camera.position, { x: 3, y: 3, z: 5, duration: 1 });
 }

@@ -2,19 +2,29 @@ import GUI from 'lil-gui';
 import data from './data.js';
 
 // Deconstruct data object
-const { planeData, textureData, options, colors} = data;
+const { planeData, textureData, options, cameraData, colors } = data;
 
-export function setupGUI(scene, groupData) {
+export function setupGUI(scene, groupData, camera, renderer, customFunction) {
     const gui = new GUI();
     
+    // Group settings
     const groupFolder = gui.addFolder('Group Settings');
-    
     Object.keys(groupData).forEach(prop => {
         groupFolder.add(groupData, prop, -5, 5, 0.01).listen();
     });
-
     groupFolder.open();
 
+    // Camera settings
+    const cameraFolder = gui.addFolder('Camera Settings');
+    cameraFolder.add(camera.position, 'x', -100, 100, 0.01).name('Camera X').listen();
+    cameraFolder.add(camera.position, 'y', -100, 100, 0.01).name('Camera Y').listen();
+    cameraFolder.add(camera.position, 'z', -100, 100, 0.01).name('Camera Z').listen();
+    cameraFolder.open();
+
+    // Button to run custom function
+    gui.add({ run: customFunction }, 'run').name('Run Custom Function');
+
+    // Background color
     gui.addColor(colors, 'backgroundColor')
         .name('Background Color')
         .onChange(() => scene.background.set(colors.backgroundColor));
