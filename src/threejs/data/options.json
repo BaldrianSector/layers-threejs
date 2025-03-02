@@ -1,6 +1,5 @@
 {
     "showGrid": false,
     "useTexture": true,
-    "useDisplacement": false,
-    "backgroundColor": "#C4C5C9"
+    "useDisplacement": false
 }

@@ -1,0 +1,16 @@
+{
+    "backgroundColor": "#C4C5C9",
+    "text": {
+        "color": {
+                "hover": "#FF0000",
+                "primary": "#000000",
+                "secondary": "#FF0000"
+        },
+        "opacity": {
+                "hover": 0.5,
+                "primary": 1,
+                "secondary": 0.5
+        }
+
+    }
+}

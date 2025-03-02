@@ -7,7 +7,7 @@ import { handleResize } from './resizeHandler.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // Deconstruct data object
-const { planeData, textureData, options } = data;
+const { planeData, textureData, options, fonts, colors } = data;
 
 // Texture loader and caching
 const textureLoader = new THREE.TextureLoader();
@@ -38,7 +38,7 @@ export function createScene() {
     // Create camera
     const camera = createCamera(aspect);
 
-    scene.background = new THREE.Color(options.backgroundColor); // Light blue
+    scene.background = new THREE.Color(colors.backgroundColor);
 
     // Ambient light
     const ambientLight = new THREE.AmbientLight(0xffffff, 3);
