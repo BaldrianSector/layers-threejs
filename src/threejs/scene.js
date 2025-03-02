@@ -7,7 +7,6 @@ import { handleResize } from './resizeHandler.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { createTextMesh, createHeaderTextMesh } from './createTextMesh.js';
 
-
 // Deconstruct data object
 const { planeData, textureData, options, fonts, colors, stack } = data;
 
@@ -121,6 +120,22 @@ export function createScene() {
 
     // Create text with a different font
     createHeaderTextMesh(group, 'Greenland', 0.5, 0.1, 0.01, true);
+    
+    // Create a dashed line
+    const dashedMaterial = new THREE.LineDashedMaterial( { color: 0xffffff, dashSize: 0.1, gapSize: 0.1 } )
+    const points = [];
+    points.push(new THREE.Vector3(0, 0, -2));
+    points.push(new THREE.Vector3(0, 0, -8.86));
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+
+    const line = new THREE.Line(lineGeometry, dashedMaterial);
+    line.computeLineDistances();
+    
+    const layer2 = new THREE.Group();
+    layer2.add(line);
+    createTextMesh(layer2, 'Greenland has a variety of minerals that are of global interest.', 0.1, 0.1, 0.01, 900, false, { x: 0, y: 0.1, z: -5 });
+    
+    group.add(layer2);
     
     scene.add(group);
 

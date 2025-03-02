@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { TTFLoader, FontLoader, TextGeometry } from 'three/examples/jsm/Addons.js';
 
-export function createHeaderTextMesh(group, textInput, size = 1, height = 0.1, depth = 0.01) {
+export function createHeaderTextMesh(group, textInput, size = 1, height = 0.1, depth = 0.01, position = { x: 0, y: 0, z: 0 }) {
     const ttfLoader = new TTFLoader();
     const fontLoader = new FontLoader();
 
@@ -22,11 +22,13 @@ export function createHeaderTextMesh(group, textInput, size = 1, height = 0.1, d
 
         textMesh.rotateY(Math.PI / 2);
 
+        textMesh.position.set(position.x, position.y, position.z);
+
         group.add(textMesh);
     });
 }
 
-export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth = 0.01, weight = 400, italic = false) {
+export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth = 0.01, weight = 400, italic = false, position = { x: 0, y: 0, z: 0 }) {
     const ttfLoader = new TTFLoader();
     const fontLoader = new FontLoader();
 
@@ -94,6 +96,15 @@ export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth
 
         // For example, rotate 90 degrees about Y-axis
         textMesh.rotateY(Math.PI / 2);
+
+        // Set the position of the text mesh
+        textMesh.position.set(position.x, position.y, position.z);
+
+        // calculate the bounding box of the text geometry
+        textGeometry.computeBoundingBox();
+        
+        // log the bounding box to the console
+        console.log(textGeometry.boundingBox);
 
         group.add(textMesh);
     });
