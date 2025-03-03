@@ -315,6 +315,8 @@ export function createScene() {
         gsap.to(group.position, { x: -1.2, duration: 3 });
         gsap.to(group.position, { z: 1.2, duration: 3 });
 
+        // THIS DOES NOT WORK SINCE THE POSITION IS BEING ALTERED AS THE ANIMATION IS GOING ON
+
         // Offset the group's Y position by the chosen box's position
         gsap.to(group.position.y = group.children[chosenBox].position.y, { duration: 3 });
 
@@ -334,6 +336,8 @@ export function createScene() {
                 camera.updateProjectionMatrix();
             }
         });
+
+        // THIS DOES NOT WORK SINCE THE POSITION IS BEING ALTERED AS THE ANIMATION IS GOING ON
 
         // Offset the group's Y position by the chosen box's position
         gsap.to(group.position.y = group.children[chosenBox].position.y, { duration: 3 });
