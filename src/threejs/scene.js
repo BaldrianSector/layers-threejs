@@ -98,15 +98,14 @@ export function createScene() {
         const geometry = new THREE.BoxGeometry(boxData.dimensions.width, boxData.dimensions.height, boxData.dimensions.length);
         const box = boxData.boxes.find(b => b.number === index);
         const texture = getTexture(box.texture);
-        const material = new THREE.MeshPhongMaterial({ map: getTexture(texture), transparent: false });
-        console.log('Box', index, 'texture:', texture);
+        const material = new THREE.MeshPhongMaterial({ map: texture, transparent: false });        
         const boxMesh = new THREE.Mesh(geometry, material);
         group.add(boxMesh);
     }
 
-    createBox(1);
-    createBox(2);
     createBox(3);
+    createBox(2);
+    createBox(1);
 
     function updatePlanes() {
         while (planeTextures.length < planeData.planes) {
