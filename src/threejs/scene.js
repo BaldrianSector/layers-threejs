@@ -107,84 +107,20 @@ export function createScene() {
     createBox(2);
     createBox(1);
 
-    function updatePlanes() {
-        while (planeTextures.length < planeData.planes) {
-            const randomTexturePath = texturePaths[Math.floor(Math.random() * texturePaths.length)];
-            planeTextures.push({ texture: getTexture(randomTexturePath), path: randomTexturePath });
-        }
-        while (planeTextures.length > planeData.planes) {
-            planeTextures.pop();
-        }
-
-        const totalHeight = (planeData.planes - 1) * planeData.spacing;
-        const startY = -totalHeight / 2;
-
-        for (let i = 0; i < planeData.planes; i++) {
-            const newGeometry = new THREE.BoxGeometry(
-                planeData.dimensions.width,
-                planeData.dimensions.height,
-                planeData.dimensions.length,
-                planeData.segments.width,
-                planeData.segments.height,
-                planeData.segments.length                
-            );
-
-            let material;
-            if (planeData.useTexture) {
-                let materialOptions = {
-                    map: planeTextures[i].texture,
-                    side: THREE.DoubleSide,
-                    transparent: true
-                };
-            
-                if (planeData.useDisplacement) {
-                    materialOptions.displacementMap = planeTextures[i].texture;
-                    materialOptions.displacementScale = planeData.depthScale;
-                }
-            
-                material = new THREE.MeshPhongMaterial(materialOptions);            
-            } else {
-                let gradient = 0.1 + (i / (planeData.planes - 1)) * 0.9;
-                const color = new THREE.Color(gradient, gradient, gradient);
-                material = new THREE.MeshBasicMaterial({ color: color, transparent: true });
-            }
-
-            const newPlane = new THREE.Mesh(newGeometry, material);
-            newPlane.position.y = startY + i * planeData.spacing;
-            newPlane.userData.texturePath = planeTextures[i]?.path || 'Color';
-            scene.add(newPlane);
-            planesArray.push(newPlane);
-        }
-    }
-
-
     // Create sphere
     const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
     const sphereMaterial = new THREE.MeshBasicMaterial({ wireframe: true });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     // group.add(sphere);
 
-    // Create custom 3d object from src/assets/3d_models/mountain.glb
-    const loader = new GLTFLoader();
-    loader.load('src/assets/3d_models/grid.glb', (gltf) => {
-        gltf.scene.scale.set(1, 1, 1);
-        // rotate 90 degrees
-        gltf.scene.rotation.y = Math.PI / 2;
-        const layer = new THREE.Group();
-        
-        // make a plane to put the 3d object on
-        const planeGeometry = new THREE.PlaneGeometry(2.4, 4);
-        const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5, transparent: true, side: THREE.DoubleSide });
-        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        // rotate 90 degrees
-        plane.rotation.x = Math.PI / 2;
+    const layer3 = new THREE.Group();
+    // Create 3D objects
 
-        layer.add(plane);
-
-        layer.add(gltf.scene);
-            
-        // group.add(layer);
-    });
+    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 180, { x: 0, y: 0, z: 0 }, (object) => {layer3.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 180, { x: 1, y: 0, z: 0.6 }, (object) => {layer3.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_blue.glb', 0.1, 180, { x: -1.3, y: 0, z: -3 }, (object) => {layer3.add(object);});
+    
+    group.add(layer3);
 
     // Create text with custom font
     // createTextMesh(group, 'Minerals of global interest', 0.1, 0.1, 0.01, 100, false);
@@ -295,3 +231,17 @@ function getCircularReplacer() {
         return value;
     };
 }    
+
+function create3DObject(path, scale, rotation, position, callback) {
+    const loader = new GLTFLoader();
+    loader.load(path, (gltf) => {
+        gltf.scene.scale.set(scale, scale, scale);
+        gltf.scene.rotation.y = dtr(rotation);
+        gltf.scene.position.set(position.x, position.y, position.z);
+        callback(gltf.scene);
+    });
+}
+
+function dtr(degrees) {
+    return degrees * (Math.PI / 180);
+}
