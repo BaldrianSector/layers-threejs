@@ -1,43 +1,196 @@
 {
   "boxes": [
-    {
-      "name": "box1",
-      "number": 1,
-      "texture": "src/assets/textures/snow-ground-water.jpg",
-      "displacement": "src/assets/textures/snow-ground-water.jpg"
-    },
-    {
-      "name": "box2",
-      "number": 2,
-      "texture": "src/assets/textures/stone.png",
-      "displacement": "src/assets/textures/stone.png"
-    },
-    {
-      "name": "box3",
-      "number": 3,
-      "texture": "src/assets/textures/structure.png",
-      "displacement": "src/assets/textures/structure.png"
-    },
-    {
-      "name": "box4",
-      "number": 4,
-      "texture": "src/assets/textures/topography-transparrent.png",
-      "displacement": "src/assets/textures/topography-transparrent.png"
-    }
-
+      {
+          "name": "box1",
+          "number": 1,
+          "texture": "src/assets/textures/2.4x4/boat_topdown.png",
+          "displacement": "src/assets/textures/2.4x4/boat_topdown.png"
+      },
+      {
+          "name": "box2",
+          "number": 2,
+          "texture": "src/assets/textures/2.4x4/city_sideview2.png",
+          "displacement": "src/assets/textures/2.4x4/city_sideview2.png"
+      },
+      {
+          "name": "box3",
+          "number": 3,
+          "texture": "src/assets/textures/2.4x4/colored_layers.png",
+          "displacement": "src/assets/textures/2.4x4/colored_layers.png"
+      },
+      {
+          "name": "box4",
+          "number": 4,
+          "texture": "src/assets/textures/2.4x4/colored_layers2.png",
+          "displacement": "src/assets/textures/2.4x4/colored_layers2.png"
+      },
+      {
+          "name": "box5",
+          "number": 5,
+          "texture": "src/assets/textures/2.4x4/hill.png",
+          "displacement": "src/assets/textures/2.4x4/hill.png"
+      },
+      {
+          "name": "box6",
+          "number": 6,
+          "texture": "src/assets/textures/2.4x4/hunter.png",
+          "displacement": "src/assets/textures/2.4x4/hunter.png"
+      },
+      {
+          "name": "box7",
+          "number": 7,
+          "texture": "src/assets/textures/2.4x4/landscape5.png",
+          "displacement": "src/assets/textures/2.4x4/landscape5.png"
+      },
+      {
+          "name": "box8",
+          "number": 8,
+          "texture": "src/assets/textures/2.4x4/old_map.png",
+          "displacement": "src/assets/textures/2.4x4/old_map.png"
+      },
+      {
+          "name": "box9",
+          "number": 9,
+          "texture": "src/assets/textures/2.4x4/road.png",
+          "displacement": "src/assets/textures/2.4x4/road.png"
+      },
+      {
+          "name": "box10",
+          "number": 10,
+          "texture": "src/assets/textures/2.4x4/snow_satellite2.png",
+          "displacement": "src/assets/textures/2.4x4/snow_satellite2.png"
+      },
+      {
+          "name": "box11",
+          "number": 11,
+          "texture": "src/assets/textures/2.4x4/snow.jpg",
+          "displacement": "src/assets/textures/2.4x4/snow.jpg"
+      },
+      {
+          "name": "box12",
+          "number": 12,
+          "texture": "src/assets/textures/2.4x4/stone_texture.png",
+          "displacement": "src/assets/textures/2.4x4/stone_texture.png"
+      },
+      {
+          "name": "box13",
+          "number": 13,
+          "texture": "src/assets/textures/2.4x4/topography.jpg",
+          "displacement": "src/assets/textures/2.4x4/topography.jpg"
+      },
+      {
+          "name": "box14",
+          "number": 14,
+          "texture": "src/assets/textures/2.4x4/mining.png",
+          "displacement": "src/assets/textures/2.4x4/mining.png"
+      },
+      {
+          "name": "box15",
+          "number": 15,
+          "texture": "src/assets/textures/2.4x4/mountain_ocean_sideview.png",
+          "displacement": "src/assets/textures/2.4x4/mountain_ocean_sideview.png"
+      },
+      {
+          "name": "box16",
+          "number": 16,
+          "texture": "src/assets/textures/2.4x4/old_map.png",
+          "displacement": "src/assets/textures/2.4x4/old_map.png"
+      },
+      {
+          "name": "box17",
+          "number": 17,
+          "texture": "src/assets/textures/2.4x4/plant.png",
+          "displacement": "src/assets/textures/2.4x4/plant.png"
+      },
+      {
+          "name": "box18",
+          "number": 18,
+          "texture": "src/assets/textures/2.4x4/road.png",
+          "displacement": "src/assets/textures/2.4x4/road.png"
+      },
+      {
+          "name": "box19",
+          "number": 19,
+          "texture": "src/assets/textures/2.4x4/road2.png",
+          "displacement": "src/assets/textures/2.4x4/road2.png"
+      },
+      {
+          "name": "box20",
+          "number": 20,
+          "texture": "src/assets/textures/2.4x4/satellite.jpg",
+          "displacement": "src/assets/textures/2.4x4/satellite.jpg"
+      },
+      {
+          "name": "box21",
+          "number": 21,
+          "texture": "src/assets/textures/2.4x4/ship_dock.png",
+          "displacement": "src/assets/textures/2.4x4/ship_dock.png"
+      },
+      {
+          "name": "box22",
+          "number": 22,
+          "texture": "src/assets/textures/2.4x4/ship_topdown.png",
+          "displacement": "src/assets/textures/2.4x4/ship_topdown.png"
+      },
+      {
+          "name": "box23",
+          "number": 23,
+          "texture": "src/assets/textures/2.4x4/snow_satellite2.png",
+          "displacement": "src/assets/textures/2.4x4/snow_satellite2.png"
+      },
+      {
+          "name": "box24",
+          "number": 24,
+          "texture": "src/assets/textures/2.4x4/snow.jpg",
+          "displacement": "src/assets/textures/2.4x4/snow.jpg"
+      },
+      {
+          "name": "box25",
+          "number": 25,
+          "texture": "src/assets/textures/2.4x4/stone_texture.png",
+          "displacement": "src/assets/textures/2.4x4/stone_texture.png"
+      },
+      {
+          "name": "box26",
+          "number": 26,
+          "texture": "src/assets/textures/2.4x4/topography-transparent.png",
+          "displacement": "src/assets/textures/2.4x4/topography-transparent.png"
+      },
+      {
+          "name": "box27",
+          "number": 27,
+          "texture": "src/assets/textures/2.4x4/topography.png",
+          "displacement": "src/assets/textures/2.4x4/topography.png"
+      },
+      {
+          "name": "box28",
+          "number": 28,
+          "texture": "src/assets/textures/2.4x4/topography2.png",
+          "displacement": "src/assets/textures/2.4x4/topography2.png"
+      },
+      {
+          "name": "box29",
+          "number": 29,
+          "texture": "src/assets/textures/2.4x4/topography3.png",
+          "displacement": "src/assets/textures/2.4x4/topography3.png"
+      },
+      {
+          "name": "box30",
+          "number": 30,
+          "texture": "src/assets/textures/2.4x4/topography4.png",
+          "displacement": "src/assets/textures/2.4x4/topography4.png"
+      }
   ],
-  
   "dimensions": {
-    "width": 2.4,
-    "height": 0.2,
-    "length": 4
+      "width": 2.4,
+      "height": 0.2,
+      "length": 4
   },
   "segments": {
-    "width": 10,
-    "height": 10,
-    "length": 10
+      "width": 10,
+      "height": 10,
+      "length": 10
   },
-
   "depthScale": 0.1,
   "useTexture": true,
   "useDisplacement": false

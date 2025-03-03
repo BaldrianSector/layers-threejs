@@ -95,17 +95,44 @@ export function createScene() {
     });
 
     function createBox(index) {
-        const geometry = new THREE.BoxGeometry(boxData.dimensions.width, boxData.dimensions.height, boxData.dimensions.length);
+        const geometry = new THREE.BoxGeometry(
+            boxData.dimensions.width, 
+            boxData.dimensions.height, 
+            boxData.dimensions.length
+        );
+    
         const box = boxData.boxes.find(b => b.number === index);
         const texture = getTexture(box.texture);
-        const material = new THREE.MeshPhongMaterial({ map: texture, transparent: false });        
+    
+        // Ensure the texture repeats correctly instead of stretching
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1, 1);  // Adjust these values to fit your texture properly
+    
+        const material = new THREE.MeshStandardMaterial({ 
+            map: texture, 
+            transparent: false 
+        });
+    
         const boxMesh = new THREE.Mesh(geometry, material);
         group.add(boxMesh);
-    }
+    }    
 
-    createBox(3);
-    createBox(2);
-    createBox(1);
+    createBox(2); // city nice
+    createBox(3); // bugged
+    createBox(5); // minerals
+    createBox(6); // minerals nice
+    createBox(9); // Ship cool
+    createBox(10);
+    createBox(11);
+    createBox(12);
+    createBox(13);
+    createBox(14);
+    createBox(15);
+    createBox(16);
+    createBox(17);
+    createBox(18);
+    
 
     // Create sphere
     const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
