@@ -57,8 +57,8 @@
       {
           "name": "box10",
           "number": 10,
-          "texture": "src/assets/textures/2.4x4/snow_satellite2.png",
-          "displacement": "src/assets/textures/2.4x4/snow_satellite2.png"
+          "texture": "src/assets/textures/2.4x4/snow_satelite2.png",
+          "displacement": "src/assets/textures/2.4x4/snow_satelite2.png"
       },
       {
           "name": "box11",
@@ -177,8 +177,8 @@
       {
           "name": "box30",
           "number": 30,
-          "texture": "src/assets/textures/2.4x4/topography4.png",
-          "displacement": "src/assets/textures/2.4x4/topography4.png"
+          "texture": "src/assets/textures/2.4x4/moss.jpg",
+          "displacement": "src/assets/textures/2.4x4/moss.jpg"
       }
   ],
   "dimensions": {

@@ -10,6 +10,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { TextPlugin } from "gsap/TextPlugin";
+import { time } from 'three/tsl';
 
 gsap.registerPlugin(ScrollTrigger,ScrollToPlugin,TextPlugin);
 
@@ -115,39 +116,42 @@ export function createScene() {
         });
     
         const boxMesh = new THREE.Mesh(geometry, material);
-        group.add(boxMesh);
+        return boxMesh;
     }    
 
-    createBox(2); // city nice
-    createBox(3); // bugged
-    createBox(5); // minerals
-    createBox(6); // minerals nice
-    createBox(9); // Ship cool
-    createBox(10);
-    createBox(11);
-    createBox(12);
-    createBox(13);
-    createBox(14);
-    createBox(15);
-    createBox(16);
-    createBox(17);
-    createBox(18);
-    
+    const layer1 = createBox(12);  // White ice
+    const layer2 = createBox(3);   // Satelite
+    const layer3 = createBox(4);   // Map
+    const layer4 = createBox(18);   // Village
+    const layer5 = createBox(8);   // Colors1
+    const layer6 = createBox(10);  // Colors2
+    const layer7 = createBox(11);  // Dirt
 
+    group.add(layer4);
     // Create sphere
     const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
     const sphereMaterial = new THREE.MeshBasicMaterial({ wireframe: true });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     // group.add(sphere);
 
-    const layer3 = new THREE.Group();
-    // Create 3D objects
-
-    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 180, { x: 0, y: 0, z: 0 }, (object) => {layer3.add(object);});
-    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 180, { x: 1, y: 0, z: 0.6 }, (object) => {layer3.add(object);});
-    create3DObject('src/assets/3d_models/SmallHouse_blue.glb', 0.1, 180, { x: -1.3, y: 0, z: -3 }, (object) => {layer3.add(object);});
     
+    // Create 3D objects
+    const houseGroup = new THREE.Group();    
+    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 190, { x: 0.35, y: 0.1, z: 0 }, (object) => {houseGroup.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 10, { x: 0.8, y: 0.1, z: 0.6 }, (object) => {houseGroup.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_blue.glb', 0.1, 190, { x: 0, y: 0.1, z: 1.3 }, (object) => {houseGroup.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_blue.glb', 0.1, 10, { x: -0.1, y: 0.1, z: -0.7 }, (object) => {houseGroup.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_green.glb', 0.1, 10, { x: 1, y: 0.1, z: -0.3 }, (object) => {houseGroup.add(object);});
+
+    layer4.add(houseGroup);
+
+    group.add(layer1);
+    group.add(layer2);
     group.add(layer3);
+    group.add(layer4);
+    group.add(layer5);
+    group.add(layer6);
+    group.add(layer7);
 
     // Create text with custom font
     // createTextMesh(group, 'Minerals of global interest', 0.1, 0.1, 0.01, 100, false);
@@ -162,25 +166,44 @@ export function createScene() {
     // For now this is just a fixed line between two points, but it should scale with the text and target object
     const dashedMaterial = new THREE.LineDashedMaterial( { color: 0xffffff, dashSize: 0.1, gapSize: 0.1 } )
     const points = [];
-    points.push(new THREE.Vector3(0, 0, -2));
-    points.push(new THREE.Vector3(0, 0, -8.86));
+    points.push(new THREE.Vector3(1.2, 0, -2.2));
+    points.push(new THREE.Vector3(1.2, 0, -8.86));
     const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
 
     const line = new THREE.Line(lineGeometry, dashedMaterial);
     line.computeLineDistances();
     
-    const layer2 = new THREE.Group();
-    layer2.add(line);
-    createTextMesh(layer2, 'Greenland has a variety of minerals that are of global interest.', 0.1, 0.1, 0.01, 900, false, { x: 0, y: 0.1, z: -5 });
+    // const layer2 = new THREE.Group();
+    // layer2.add(line);
+    // createTextMesh(layer2, 'Greenland has a variety of minerals that are of global interest.', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -5 });
     
     // group.add(layer2);
     
     scene.add(group);
+    
+
+    // View State
+    const states = [state1, state2, state3, state4, state5, state6, state7];
+    let currentState = 0; // Start at the first state
+    state1(); // Execute the first state function
+    
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight' && currentState < states.length - 1) {
+            currentState++;
+            states[currentState](); // Execute the next state function
+        } else if (event.key === 'ArrowLeft' && currentState > 0) {
+            currentState--;
+            states[currentState](); // Execute the previous state function
+        }
+    });
+    
 
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     
+        controls.update();
+        
         // Apply spacing to X, Y, and Z axes
         spaceElements(group, 'x', groupData.spacingX);
         spaceElements(group, 'y', groupData.spacingY);
@@ -191,7 +214,7 @@ export function createScene() {
         group.rotation.y = groupData.rotation;
     
         // Avoid circular references in debug output
-        debug.innerHTML = `Group Data: ${JSON.stringify(groupData, getCircularReplacer(), 2)}`;
+        debug.innerHTML = `Group Data: ${JSON.stringify(groupData, getCircularReplacer(), 2)}, Camera Position: ${JSON.stringify(camera.position, getCircularReplacer(), 2)}, State ${currentState + 1}`;
     }
     
     
@@ -200,6 +223,116 @@ export function createScene() {
     
     // GUI
     setupGUI(scene, groupData, camera, renderer, setSpacingZ);
+
+
+    // Camera positions
+
+    // Landing
+    function state1() {
+        // Topdown view
+        gsap.to(camera.position, { x: 0, y: 5, z: 0, duration: 0 }, '');
+        // Slight offset on Z-axis
+        gsap.to(group.position, { z: 0.5, duration: 0 });
+        // Slight zoom out
+        gsap.to(camera, { zoom: 0.8, duration: 0, ease: "power2.inOut",
+            onUpdate: () => {
+                camera.updateProjectionMatrix();
+            }
+        });
+    }
+
+    // Soloing out
+    function state2() {
+        // Topdown view
+        gsap.to(camera.position, { x: 0, y: 5, z: 0, duration: 1.5 }, '');
+        // Reset zoom
+        gsap.to(camera, { zoom: 1, duration: 1, ease: "ease.inOut",
+            onUpdate: () => {
+                camera.updateProjectionMatrix();
+            }
+        });
+    }
+    
+    // Slide out
+    function state3() {
+        // Topdown view
+        gsap.to(camera.position, { x: 0, y: 5, z: 0, duration: 1.5 }, '');
+        // Reset zoom
+        gsap.to(camera, { zoom: 0.8, duration: 3, ease: "ease.inOut",
+            onUpdate: () => {
+                camera.updateProjectionMatrix();
+            }
+        });
+        // Space out elements along X-axis
+        gsap.to(stack, { spacingX: -2.6, duration: 3, ease: "power3.inOut" });
+    }
+    
+    // Wow moment
+    function state4() {
+        // Angle view
+        gsap.to(camera.position, { x: 3, y: 2.5, z: 5, duration: 3, ease: "power3.inOut" });
+        // Reset spacing along Y-axis
+        gsap.to(stack, { spacingY: 0.75, duration: 3, ease: "power3.inOut" });
+        // Reset spacing along X-axis
+        gsap.to(stack, { spacingX: 0, duration: 3, ease: "power3.inOut" });
+        // Reset zoom
+        gsap.to(camera, { zoom: 1, duration: 3, ease: "ease.inOut",
+            onUpdate: () => {
+                camera.updateProjectionMatrix();
+            }
+        });
+    }
+    
+    // Individual scroll
+    function state5() {
+        // Flat angle view
+        gsap.to(camera.position, { x: 3, y: 1.3, z: 2, duration: 3 });
+        // Set big spacing along Y-axis
+        gsap.to(stack, { spacingY: 2.3, duration: 3, ease: "power3.inOut" });
+        // Zoom in
+        gsap.to(camera, { zoom: 1.5, duration: 3, ease: "ease.inOut",
+            onUpdate: () => {
+                camera.updateProjectionMatrix();
+            }
+        });
+        // Push group left
+        gsap.to(group.position, { x: -1.2, duration: 3 });
+        gsap.to(group.position, { z: 1.2, duration: 3 });
+    }
+    
+    // Individual near + text
+    function state6() {
+        // Flat angle view
+        gsap.to(camera.position, { x: 3, y: 1.3, z: 2, duration: 3 });
+        // Off screen spacing along Y-axis
+        gsap.to(stack, { spacingY: 5, duration: 3, ease: "power3.inOut" });
+        // Zoom in
+        gsap.to(camera, { zoom: 1.6, duration: 3, ease: "ease.inOut",
+            onUpdate: () => {
+                camera.updateProjectionMatrix();
+            }
+        });
+        // Push group left
+        gsap.to(group.position, { x: -1.2, duration: 3 });
+        gsap.to(group.position, { z: 1.2, duration: 3 });
+    }
+
+    // End
+    function state7() {
+        // Side view
+        gsap.to(camera.position, { x: 3, y: 0, z: 0, duration: 3 });
+        // Off screen spacing along Y-axis
+        gsap.to(stack, { spacingY: 0.65, duration: 3, ease: "power3.inOut" });
+        // Zoom in
+        gsap.to(camera, { zoom: 1, duration: 3, ease: "ease.inOut",
+            onUpdate: () => {
+                camera.updateProjectionMatrix();
+            }
+        });
+        // Reset group position
+        gsap.to(group.position, { x: 0, duration: 3 });
+        gsap.to(group.position, { z: 0, duration: 3 });
+    }
 }
 
 // Helper Functions

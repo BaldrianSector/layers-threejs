@@ -19,6 +19,12 @@ export function setupGUI(scene, groupData, camera, renderer, customFunction) {
     cameraFolder.add(camera.position, 'x', -100, 100, 0.01).name('Camera X').listen();
     cameraFolder.add(camera.position, 'y', -100, 100, 0.01).name('Camera Y').listen();
     cameraFolder.add(camera.position, 'z', -100, 100, 0.01).name('Camera Z').listen();
+    
+    // Camera zoom
+    cameraFolder.add(camera, 'zoom', 0.1, 10, 0.01).name('Camera Zoom').listen();
+    cameraFolder.add(camera, 'near', 0.1, 100, 0.01).name('Camera Near').listen();
+    cameraFolder.add(camera, 'far', 0.1, 1000, 0.01).name('Camera Far').listen();
+
     cameraFolder.open();
 
     // Button to run custom function
