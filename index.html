@@ -12,6 +12,16 @@
             canvas {
                 display: block;
             }
+            #debug {
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 10px;
+                background-color: rgba(0, 0, 0, 0.5);
+                color: white;
+                font-family: monospace;
+                white-space: pre;
+            }
         </style>
     </head>
     <body>
@@ -19,5 +29,7 @@
             import { createScene } from './src/threejs/scene.js';
             createScene();
         </script>
+        <div id="debug">
+        </div>
     </body>
 </html>

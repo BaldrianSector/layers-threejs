@@ -21,6 +21,8 @@ const textureLoader = new THREE.TextureLoader();
 textureLoader.setCrossOrigin('anonymous');
 const textureCache = new Map();
 
+const debug = document.getElementById('debug');
+
 function getTexture(path) {
     if (!path) {
         console.error('Texture path is undefined');
@@ -40,6 +42,7 @@ function getTexture(path) {
 // Create scene
 export function createScene() {
     const scene = new THREE.Scene();
+    window.scene = scene
     const aspect = window.innerWidth / window.innerHeight;
     
     // Create camera
@@ -120,12 +123,12 @@ export function createScene() {
     });
 
     // Create text with custom font
-    createTextMesh(group, 'Minerals of global interest', 0.1, 0.1, 0.01, 100, false);
-    createTextMesh(group, 'Greenland has a variety of minerals that are of global interest.', 0.1, 0.1, 0.01, 900, false);
-    createTextMesh(group, 'Some italic text would look like this', 0.1, 0.1, 0.01, 500, true);
+    // createTextMesh(group, 'Minerals of global interest', 0.1, 0.1, 0.01, 100, false);
+    // createTextMesh(group, 'Greenland has a variety of minerals that are of global interest.', 0.1, 0.1, 0.01, 900, false);
+    // createTextMesh(group, 'Some italic text would look like this', 0.1, 0.1, 0.01, 500, true);
 
-    // Create text with a different font
-    createHeaderTextMesh(group, 'Greenland', 0.5, 0.1, 0.01, true);
+    // // Create text with a different font
+    // createHeaderTextMesh(group, 'Greenland', 0.5, 0.1, 0.01, true);
     
     // Create a dashed line
 
@@ -143,27 +146,31 @@ export function createScene() {
     layer2.add(line);
     createTextMesh(layer2, 'Greenland has a variety of minerals that are of global interest.', 0.1, 0.1, 0.01, 900, false, { x: 0, y: 0.1, z: -5 });
     
-    group.add(layer2);
+    // group.add(layer2);
     
     scene.add(group);
 
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
-
+    
         // Apply spacing to X, Y, and Z axes
         spaceElements(group, 'x', groupData.spacingX);
         spaceElements(group, 'y', groupData.spacingY);
         spaceElements(group, 'z', groupData.spacingZ);
-
+    
         // Update group's scale and rotation based on groupData
         group.scale.set(groupData.scale, groupData.scale, groupData.scale);
         group.rotation.y = groupData.rotation;
+    
+        // Avoid circular references in debug output
+        debug.innerHTML = `Group Data: ${JSON.stringify(groupData, getCircularReplacer(), 2)}`;
     }
-
+    
+    
     animate();
     handleResize(camera, renderer);
-
+    
     // GUI
     setupGUI(scene, groupData, camera, renderer, setSpacingZ);
 }
@@ -174,9 +181,31 @@ export function createScene() {
 function spaceElements(group, axis, spacing) {
     const offset = (group.children.length - 1) * spacing / 2;
     group.children.forEach((child, index) => {
-        child.position[axis] = index * spacing - offset;
+        const newPos = index * spacing - offset;
+        // Only updateanim position if value has changed
+        if (child.position[axis] !== newPos) {
+            child.position[axis] = newPos;
+            
+            // Assuming each child is a plane with properties: width, height, and position = [x, y, z]
+            // We assume the plane is centered at child.position and lies on the XY-plane.
+            const halfWidth = child.width / 2;
+            const halfHeight = child.height / 2;
+            const x = child.position[0];
+            const y = child.position[1];
+            const z = child.position[2];
+            
+            // Calculate the four corners of the plane
+            const topLeft = [x - halfWidth, y + halfHeight, z];
+            const topRight = [x + halfWidth, y + halfHeight, z];
+            const bottomLeft = [x - halfWidth, y - halfHeight, z];
+            const bottomRight = [x + halfWidth, y - halfHeight, z];
+            
+            // console.log(`Child ${index} corners:`, topLeft, topRight, bottomLeft, bottomRight);
+        }
+        
     });
 }
+
 
 // Set spacingZ to 2 with gsap animation
 function setSpacingZ() {
@@ -185,7 +214,20 @@ function setSpacingZ() {
 
 
 // Reset camera position
-function resetCamera() {
+function resetCamera(camera) {
     // reset camera position
     gsap.to(camera.position, { x: 3, y: 3, z: 5, duration: 1 });
 }
+
+function getCircularReplacer() {
+    const seen = new WeakSet();
+    return (key, value) => {
+        if (typeof value === "object" && value !== null) {
+            if (seen.has(value)) {
+                return "[Circular]"; // Prevent circular reference
+            }
+            seen.add(value);
+        }
+        return value;
+    };
+}    
