@@ -197,13 +197,19 @@ export function createScene() {
         }
     });
     
-
+    // Box chosen
+    let chosenBox = 0;
+    
+    console.log("Chosen Box Position:", group.children[chosenBox].position.y);
+    
+    
+    
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
-    
-        controls.update();
         
+        controls.update();
+
         // Apply spacing to X, Y, and Z axes
         spaceElements(group, 'x', groupData.spacingX);
         spaceElements(group, 'y', groupData.spacingY);
@@ -214,9 +220,8 @@ export function createScene() {
         group.rotation.y = groupData.rotation;
     
         // Avoid circular references in debug output
-        debug.innerHTML = `Group Data: ${JSON.stringify(groupData, getCircularReplacer(), 2)}, Camera Position: ${JSON.stringify(camera.position, getCircularReplacer(), 2)}, State ${currentState + 1}`;
+        debug.innerHTML = `Group Data: ${JSON.stringify(groupData, getCircularReplacer(), 2)}, Camera Position: ${JSON.stringify(camera.position, getCircularReplacer(), 2)}, State ${currentState + 1}, Chosen Box: ${chosenBox}`;
     }
-    
     
     animate();
     handleResize(camera, renderer);
@@ -253,7 +258,7 @@ export function createScene() {
         });
         // Reset spacing along X-axis
         gsap.to(stack, { spacingX: 0, duration: 1, ease: "power3.inOut" });
-        
+
         // Set houses to 0 opacity
         opacityChange(houseGroup, 0, 0);
     }
@@ -286,8 +291,12 @@ export function createScene() {
                 camera.updateProjectionMatrix();
             }
         });
+        // Reset group Y position
+        gsap.to(group.position.y = 0, { duration: 3 });
+
         // Set houses to 0 opacity
         opacityChange(houseGroup, 0, 3);
+
     }
     
     // Individual scroll
@@ -306,8 +315,11 @@ export function createScene() {
         gsap.to(group.position, { x: -1.2, duration: 3 });
         gsap.to(group.position, { z: 1.2, duration: 3 });
 
+        // Offset the group's Y position by the chosen box's position
+        gsap.to(group.position.y = group.children[chosenBox].position.y, { duration: 3 });
+
         // Fade in houses
-        opacityChange(houseGroup, 1, 3);
+        opacityChange(houseGroup, 1, 3);        
     }
     
     // Individual near + text
@@ -322,6 +334,10 @@ export function createScene() {
                 camera.updateProjectionMatrix();
             }
         });
+
+        // Offset the group's Y position by the chosen box's position
+        gsap.to(group.position.y = group.children[chosenBox].position.y, { duration: 3 });
+
         // Push group left
         gsap.to(group.position, { x: -1.2, duration: 3 });
         gsap.to(group.position, { z: 1.2, duration: 3 });
@@ -342,10 +358,12 @@ export function createScene() {
                 camera.updateProjectionMatrix();
             }
         });
-        // Reset group position
-        gsap.to(group.position, { x: 0, duration: 3 });
-        gsap.to(group.position, { z: 0, duration: 3 });
+        // Reset group Y position
+        gsap.to(group.position, { y: 0, duration: 3 });
 
+        // Reset group X position
+        gsap.to(group.position, { x: 0, duration: 3 });
+        
         // Fade out houses
         opacityChange(houseGroup, 0, 2.5);
     }
