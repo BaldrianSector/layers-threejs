@@ -240,7 +240,7 @@ export function createScene() {
             }
         });
     }
-
+    
     // Soloing out
     function state2() {
         // Topdown view
@@ -251,6 +251,11 @@ export function createScene() {
                 camera.updateProjectionMatrix();
             }
         });
+        // Reset spacing along X-axis
+        gsap.to(stack, { spacingX: 0, duration: 1, ease: "power3.inOut" });
+        
+        // Set houses to 0 opacity
+        opacityChange(houseGroup, 0, 0);
     }
     
     // Slide out
@@ -281,6 +286,8 @@ export function createScene() {
                 camera.updateProjectionMatrix();
             }
         });
+        // Set houses to 0 opacity
+        opacityChange(houseGroup, 0, 3);
     }
     
     // Individual scroll
@@ -298,6 +305,9 @@ export function createScene() {
         // Push group left
         gsap.to(group.position, { x: -1.2, duration: 3 });
         gsap.to(group.position, { z: 1.2, duration: 3 });
+
+        // Fade in houses
+        opacityChange(houseGroup, 1, 3);
     }
     
     // Individual near + text
@@ -315,6 +325,9 @@ export function createScene() {
         // Push group left
         gsap.to(group.position, { x: -1.2, duration: 3 });
         gsap.to(group.position, { z: 1.2, duration: 3 });
+        
+        // Fade in houses
+        opacityChange(houseGroup, 1, 1.5);
     }
 
     // End
@@ -332,6 +345,9 @@ export function createScene() {
         // Reset group position
         gsap.to(group.position, { x: 0, duration: 3 });
         gsap.to(group.position, { z: 0, duration: 3 });
+
+        // Fade out houses
+        opacityChange(houseGroup, 0, 2.5);
     }
 }
 
@@ -404,4 +420,13 @@ function create3DObject(path, scale, rotation, position, callback) {
 
 function dtr(degrees) {
     return degrees * (Math.PI / 180);
+}
+
+function opacityChange(targetParent, opacityValue, duration) {
+    targetParent.traverse(child => {
+        if (child.isMesh) {
+            child.material.transparent = true;
+            gsap.to(child.material, { opacity: opacityValue, duration: duration, ease: "power2.inOut" });
+        }
+    });
 }
