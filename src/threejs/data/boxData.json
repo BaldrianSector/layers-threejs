@@ -1,0 +1,44 @@
+{
+  "boxes": [
+    {
+      "name": "box1",
+      "number": 1,
+      "texture": "src/assets/textures/snow-ground-water.jpg",
+      "displacement": "src/assets/textures/snow-ground-water.jpg"
+    },
+    {
+      "name": "box2",
+      "number": 2,
+      "texture": "src/assets/textures/stone.png",
+      "displacement": "src/assets/textures/stone.png"
+    },
+    {
+      "name": "box3",
+      "number": 3,
+      "texture": "src/assets/textures/structure.png",
+      "displacement": "src/assets/textures/structure.png"
+    },
+    {
+      "name": "box4",
+      "number": 4,
+      "texture": "src/assets/textures/topography-transparrent.png",
+      "displacement": "src/assets/textures/topography-transparrent.png"
+    }
+
+  ],
+  
+  "dimensions": {
+    "width": 2.4,
+    "height": 0.2,
+    "length": 4
+  },
+  "segments": {
+    "width": 10,
+    "height": 10,
+    "length": 10
+  },
+
+  "depthScale": 0.1,
+  "useTexture": true,
+  "useDisplacement": false
+}

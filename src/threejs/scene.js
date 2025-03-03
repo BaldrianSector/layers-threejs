@@ -14,7 +14,7 @@ import { TextPlugin } from "gsap/TextPlugin";
 gsap.registerPlugin(ScrollTrigger,ScrollToPlugin,TextPlugin);
 
 // Deconstruct data object
-const { planeData, textureData, options, fonts, colors, stack } = data;
+const { planeData, boxData, textureData, options, fonts, colors, stack } = data;
 
 // Texture loader and caching
 const textureLoader = new THREE.TextureLoader();
@@ -93,6 +93,71 @@ export function createScene() {
 
         // group.add(mesh);
     });
+
+    function createBox(index) {
+        const geometry = new THREE.BoxGeometry(boxData.dimensions.width, boxData.dimensions.height, boxData.dimensions.length);
+        const box = boxData.boxes.find(b => b.number === index);
+        const texture = getTexture(box.texture);
+        const material = new THREE.MeshPhongMaterial({ map: getTexture(texture), transparent: false });
+        console.log('Box', index, 'texture:', texture);
+        const boxMesh = new THREE.Mesh(geometry, material);
+        group.add(boxMesh);
+    }
+
+    createBox(1);
+    createBox(2);
+    createBox(3);
+
+    function updatePlanes() {
+        while (planeTextures.length < planeData.planes) {
+            const randomTexturePath = texturePaths[Math.floor(Math.random() * texturePaths.length)];
+            planeTextures.push({ texture: getTexture(randomTexturePath), path: randomTexturePath });
+        }
+        while (planeTextures.length > planeData.planes) {
+            planeTextures.pop();
+        }
+
+        const totalHeight = (planeData.planes - 1) * planeData.spacing;
+        const startY = -totalHeight / 2;
+
+        for (let i = 0; i < planeData.planes; i++) {
+            const newGeometry = new THREE.BoxGeometry(
+                planeData.dimensions.width,
+                planeData.dimensions.height,
+                planeData.dimensions.length,
+                planeData.segments.width,
+                planeData.segments.height,
+                planeData.segments.length                
+            );
+
+            let material;
+            if (planeData.useTexture) {
+                let materialOptions = {
+                    map: planeTextures[i].texture,
+                    side: THREE.DoubleSide,
+                    transparent: true
+                };
+            
+                if (planeData.useDisplacement) {
+                    materialOptions.displacementMap = planeTextures[i].texture;
+                    materialOptions.displacementScale = planeData.depthScale;
+                }
+            
+                material = new THREE.MeshPhongMaterial(materialOptions);            
+            } else {
+                let gradient = 0.1 + (i / (planeData.planes - 1)) * 0.9;
+                const color = new THREE.Color(gradient, gradient, gradient);
+                material = new THREE.MeshBasicMaterial({ color: color, transparent: true });
+            }
+
+            const newPlane = new THREE.Mesh(newGeometry, material);
+            newPlane.position.y = startY + i * planeData.spacing;
+            newPlane.userData.texturePath = planeTextures[i]?.path || 'Color';
+            scene.add(newPlane);
+            planesArray.push(newPlane);
+        }
+    }
+
 
     // Create sphere
     const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
