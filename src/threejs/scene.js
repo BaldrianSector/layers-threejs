@@ -195,6 +195,13 @@ export function createScene() {
             currentState--;
             states[currentState](); // Execute the previous state function
         }
+        // Increment chosen box
+        if (event.key === 'ArrowDown' && chosenBox < group.children.length - 1) {
+            chosenBox++;
+        }
+        if (event.key === 'ArrowUp' && chosenBox > 0) {
+            chosenBox--;
+        }
     });
     
     // Box chosen
@@ -218,7 +225,15 @@ export function createScene() {
         // Update group's scale and rotation based on groupData
         group.scale.set(groupData.scale, groupData.scale, groupData.scale);
         group.rotation.y = groupData.rotation;
-    
+        
+        // Hacky solution. Not very smooth but good enough for rock.
+        // Update stack Y position to match the chosen box if in state 5 or 6
+        if (currentState === 4 ) {
+            gsap.to(group.position, { y: group.children[chosenBox].position.y, duration: 1.5});
+        } else if (currentState === 5) {
+            gsap.to(group.position, { y: group.children[chosenBox].position.y, duration: 0});
+        }
+
         // Avoid circular references in debug output
         debug.innerHTML = `Group Data: ${JSON.stringify(groupData, getCircularReplacer(), 2)}, Camera Position: ${JSON.stringify(camera.position, getCircularReplacer(), 2)}, State ${currentState + 1}, Chosen Box: ${chosenBox}`;
     }
@@ -291,11 +306,12 @@ export function createScene() {
                 camera.updateProjectionMatrix();
             }
         });
-        // Reset group Y position
-        gsap.to(group.position.y = 0, { duration: 3 });
 
         // Set houses to 0 opacity
         opacityChange(houseGroup, 0, 3);
+
+        // Reset group Y position
+        gsap.to(group.position, { y: 0, duration: 3 });
 
     }
     
@@ -304,7 +320,7 @@ export function createScene() {
         // Flat angle view
         gsap.to(camera.position, { x: 3, y: 1.3, z: 2, duration: 3 });
         // Set big spacing along Y-axis
-        gsap.to(stack, { spacingY: 2.3, duration: 3, ease: "power3.inOut" });
+        gsap.to(stack, { spacingY: 2.3, duration: 3 });
         // Zoom in
         gsap.to(camera, { zoom: 1.5, duration: 3, ease: "ease.inOut",
             onUpdate: () => {
@@ -314,11 +330,6 @@ export function createScene() {
         // Push group left
         gsap.to(group.position, { x: -1.2, duration: 3 });
         gsap.to(group.position, { z: 1.2, duration: 3 });
-
-        // THIS DOES NOT WORK SINCE THE POSITION IS BEING ALTERED AS THE ANIMATION IS GOING ON
-
-        // Offset the group's Y position by the chosen box's position
-        gsap.to(group.position.y = group.children[chosenBox].position.y, { duration: 3 });
 
         // Fade in houses
         opacityChange(houseGroup, 1, 3);        
@@ -336,11 +347,6 @@ export function createScene() {
                 camera.updateProjectionMatrix();
             }
         });
-
-        // THIS DOES NOT WORK SINCE THE POSITION IS BEING ALTERED AS THE ANIMATION IS GOING ON
-
-        // Offset the group's Y position by the chosen box's position
-        gsap.to(group.position.y = group.children[chosenBox].position.y, { duration: 3 });
 
         // Push group left
         gsap.to(group.position, { x: -1.2, duration: 3 });
@@ -365,8 +371,9 @@ export function createScene() {
         // Reset group Y position
         gsap.to(group.position, { y: 0, duration: 3 });
 
-        // Reset group X position
+        // Reset group X and Z position
         gsap.to(group.position, { x: 0, duration: 3 });
+        gsap.to(group.position, { z: 0, duration: 3 });
         
         // Fade out houses
         opacityChange(houseGroup, 0, 2.5);
