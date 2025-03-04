@@ -6,6 +6,7 @@ import options from './data/options.json';
 import stack from './data/stackData.json';
 import fonts from './data/fonts.json';
 import colors from './data/colors.json';
+import text from './data/textData.json';
 
 const state = {
     planeData,
@@ -15,7 +16,8 @@ const state = {
     options,
     fonts,
     colors,
-    stack
+    stack,
+    text
 };
 
 export default state;

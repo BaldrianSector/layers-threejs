@@ -15,14 +15,20 @@ import { TextPlugin } from "gsap/TextPlugin";
 gsap.registerPlugin(ScrollTrigger,ScrollToPlugin,TextPlugin);
 
 // Deconstruct data object
-const { planeData, boxData, textureData, options, fonts, colors, stack } = data;
+const { planeData, boxData, textureData, options, fonts, colors, stack, text } = data;
 
 // Texture loader and caching
 const textureLoader = new THREE.TextureLoader();
 textureLoader.setCrossOrigin('anonymous');
 const textureCache = new Map();
 
+
 const debug = document.getElementById('debug');
+
+const infoText = document.getElementById('info-text');
+const chosenTitle = document.getElementById('chosen-title');
+const chosenNumber = document.getElementById('chosen-number');
+const chosenText = document.getElementById('chosen-text');
 
 function getTexture(path) {
     if (!path) {
@@ -48,26 +54,30 @@ export function createScene() {
     
     // Create camera
     const camera = createCamera(aspect);
-
+    
     scene.background = new THREE.Color(colors.backgroundColor);
-
+    
     // Ambient light
     const ambientLight = new THREE.AmbientLight(0xffffff, 3);
     scene.add(ambientLight);
-
+    
     // Create renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-
+    
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-
+    
     // Create group for objects
     const group = new THREE.Group();
-
+    
     const groupData = stack;
+
+    // Box chosen
+    let chosenBox = 0;
+    updateText(chosenBox);
 
     // Create planes
     planeData.planes.forEach((plane) => {
@@ -193,9 +203,6 @@ export function createScene() {
     let currentState = 0; // Start at the first state
     state1(); // Execute the first state function
     
-    // Box chosen
-    let chosenBox = 0;
-
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowRight' && currentState < states.length - 1) {
             currentState++;
@@ -207,9 +214,11 @@ export function createScene() {
         // Increment chosen box
         if (event.key === 'ArrowDown' && chosenBox < group.children.length - 1) {
             chosenBox++;
+            updateText(chosenBox);
         }
         if (event.key === 'ArrowUp' && chosenBox > 0) {
             chosenBox--;
+            updateText(chosenBox);
         }
 
     });
@@ -267,6 +276,9 @@ export function createScene() {
 
         opacityChangeFromTag(group, "text", 0, 0);
         opacityChangeFromTag(scene, "header", 1, 0);
+        
+        // Set info-text to 0 opacity
+        gsap.to(group.position, { y: 0, duration: 0 });
     }
     
     // Soloing out
@@ -331,6 +343,9 @@ export function createScene() {
 
         // Set header to 0 opacity
         opacityChangeFromTag(scene, "header", 0, 1.5);
+
+        // Set info-text to 0 opacity
+        gsap.to("#info-text", { opacity: 0, duration: 0.5 });
     }
     
     // Individual scroll
@@ -354,6 +369,9 @@ export function createScene() {
         
         // Fade in titles
         opacityChangeFromTag(group, "text", 1, 1.5);
+
+        // Set info-text to 1 opacity
+        gsap.to("#info-text", { opacity: 0, duration: 0.2 });
     }
     
     // Individual near + text
@@ -378,6 +396,9 @@ export function createScene() {
 
         // Fade in titles
         opacityChangeFromTag(group, "text", 1, 1.5);
+
+        // Set info-text to 1 opacity
+        gsap.to("#info-text", { opacity: 1, duration: 0.8, delay: 1.8 });
     }
 
     // End
@@ -404,6 +425,15 @@ export function createScene() {
 
         // Fade out titles
         opacityChangeFromTag(group, "text", 0, 1.5);
+
+        // Set info-text to 0 opacity
+        gsap.to("#info-text", { opacity: 0, duration: 0.2 });
+    }
+    
+    function updateText(id) {
+        chosenTitle.innerHTML = text[id+1].title;
+        chosenNumber.innerHTML = text[id+1].number;
+        chosenText.innerHTML = text[id+1].text;
     }
 }
 

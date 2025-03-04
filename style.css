@@ -1,0 +1,30 @@
+@font-face {
+    font-family: 'SofiaSans';
+    src: url('src/assets/fonts/Sofia_Sans/SofiaSans-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+}
+
+#debug {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-family: monospace;
+    white-space: pre;
+}
+
+#info-text {
+    font-family: 'SofiaSans', sans-serif;
+}
