@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { TTFLoader, FontLoader, TextGeometry } from 'three/examples/jsm/Addons.js';
-import { materialOpacity } from 'three/tsl';
+import { materialOpacity, rotate } from 'three/tsl';
 
-export function createHeaderTextMesh(group, textInput, size = 1, height = 0.1, depth = 0.01, position = { x: 0, y: 0, z: 0 }, customData) {
-    const ttfLoader = new TTFLoader();
+export function createHeaderTextMesh(userGroup, textInput, size = 1, height = 0.1, depth = 0.01, position = { x: 0, y: 0, z: 0 }, customData, lookAt) {
+const ttfLoader = new TTFLoader();
     const fontLoader = new FontLoader();
 
     ttfLoader.load("src/assets/fonts/Covered_By_Your_Grace/CoveredByYourGrace-Regular.ttf", (json) => {
@@ -27,11 +27,16 @@ export function createHeaderTextMesh(group, textInput, size = 1, height = 0.1, d
 
         textMesh.userData = customData;
 
-        group.add(textMesh);
+        if (lookAt) {
+            textMesh.lookAt(lookAt.x, lookAt.y, lookAt.z);
+        }
+        textMaterial.transparent = true;
+        
+        userGroup.add(textMesh);
     });
 }
 
-export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth = 0.01, weight = 400, italic = false, position = { x: 0, y: 0, z: 0 }, customData) {
+export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth = 0.01, weight = 400, italic = false, transparency = false, center = false, position = { x: 0, y: 0, z: 0 }, customData, lookAt) {
     const ttfLoader = new TTFLoader();
     const fontLoader = new FontLoader();
 
@@ -103,11 +108,22 @@ export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth
         // Set the position of the text mesh
         textMesh.position.set(position.x, position.y, position.z);
         
-        // Set to transparent
+        // Set transparency
         textMaterial.transparent = true;
-        textMaterial.opacity = 0.0;
-        
+        if (transparency) {
+            textMaterial.opacity = 0.0;
+        }
+
         textMesh.userData = customData;
+
+        if (lookAt) {
+            textMesh.lookAt(lookAt.x, lookAt.y, lookAt.z);
+        }
+
+        if (center) {
+            textGeometry.computeBoundingBox();
+            textGeometry.center();
+        }
 
         group.add(textMesh);
     });

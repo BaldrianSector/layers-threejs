@@ -158,25 +158,26 @@ export function createScene() {
     // createTextMesh(group, 'Minerals of global interest', 0.1, 0.1, 0.01, 100, false);
     // createTextMesh(group, 'Greenland has a variety of minerals that are of global interest.', 0.1, 0.1, 0.01, 900, false);
     // createTextMesh(group, 'Some italic text would look like this', 0.1, 0.1, 0.01, 500, true);
-
-    // Create text with a different font
-    createHeaderTextMesh(group, 'Greenland', 0.5, 0.1, 0.01, true);
     
+    // Create text with a different font
+    createHeaderTextMesh(scene, 'Greenland', 0.5, 0.1, 0.01, { x: 0, y: 0, z: -2.3}, { tag: "header"}, { x: 0, y: 11, z: -2.3 });
+    createTextMesh(scene, 'Responsible mining, independent future.', 0.1, 0.1, 0.01, 400, false, false, true, { x: 0, y: 0, z: -1.9 }, { tag: "header" }, { x: 0, y: 10, z: -1.9 })
+
     // Create a dashed line
-    createTextMesh(layer1, 'Layer1', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
-    createTextMesh(layer2, 'Layer2', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
-    createTextMesh(layer3, 'Layer3', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
-    createTextMesh(layer4, 'Layer4', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
-    createTextMesh(layer5, 'Layer5', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
-    createTextMesh(layer6, 'Layer6', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
-    createTextMesh(layer7, 'Layer7', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
-    createLine(layer1, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
-    createLine(layer2, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
-    createLine(layer3, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
-    createLine(layer4, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
-    createLine(layer5, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
-    createLine(layer6, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
-    createLine(layer7, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
+    createTextMesh(layer1, 'Layer1', 0.1, 0.1, 0.01, 900, false, true, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer3, 'Layer3', 0.1, 0.1, 0.01, 900, false, true, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer2, 'Layer2', 0.1, 0.1, 0.01, 900, false, true, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer4, 'Layer4', 0.1, 0.1, 0.01, 900, false, true, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer5, 'Layer5', 0.1, 0.1, 0.01, 900, false, true, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer6, 'Layer6', 0.1, 0.1, 0.01, 900, false, true, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer7, 'Layer7', 0.1, 0.1, 0.01, 900, false, true, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createLine(layer1, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "text"});
+    createLine(layer2, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "text"});
+    createLine(layer3, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "text"});
+    createLine(layer4, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "text"});
+    createLine(layer5, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "text"});
+    createLine(layer6, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "text"});
+    createLine(layer7, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "text"});
     
     // const layer2 = new THREE.Group();
     // layer2.add(line);
@@ -192,6 +193,9 @@ export function createScene() {
     let currentState = 0; // Start at the first state
     state1(); // Execute the first state function
     
+    // Box chosen
+    let chosenBox = 0;
+
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowRight' && currentState < states.length - 1) {
             currentState++;
@@ -209,11 +213,6 @@ export function createScene() {
         }
 
     });
-    
-    // Box chosen
-    let chosenBox = 0;
-    
-    console.log("Chosen Box Position:", group.children[chosenBox].position.y);
     
     
     
@@ -266,7 +265,8 @@ export function createScene() {
             }
         });
 
-        opacityChangeFromTag(group, "title", 0, 0);
+        opacityChangeFromTag(group, "text", 0, 0);
+        opacityChangeFromTag(scene, "header", 1, 0);
     }
     
     // Soloing out
@@ -284,6 +284,7 @@ export function createScene() {
 
         // Set houses to 0 opacity
         opacityChange(houseGroup, 0, 0);
+        opacityChangeFromTag(scene, "header", 1, 1);
     }
     
     // Slide out
@@ -298,6 +299,9 @@ export function createScene() {
         });
         // Space out elements along X-axis
         gsap.to(stack, { spacingX: -2.6, duration: 3, ease: "power3.inOut" });
+
+        // Set header to 1 opacity
+        opacityChangeFromTag(scene, "header", 1, 1.5);
     }
     
     // Wow moment
@@ -318,11 +322,15 @@ export function createScene() {
         // Set houses to 0 opacity
         opacityChange(houseGroup, 0, 3);
 
-        // Reset group Y position
+        // Reset group XYZ position
         gsap.to(group.position, { y: 0, duration: 3 });
+        gsap.to(group.position, { x: 0, duration: 3 });
 
         // Fade out titles
         opacityChangeFromTag(group, "text", 0, 1.5);
+
+        // Set header to 0 opacity
+        opacityChangeFromTag(scene, "header", 0, 1.5);
     }
     
     // Individual scroll
@@ -480,11 +488,18 @@ function opacityChange(targetParent, opacityValue, duration) {
 }
 
 function opacityChangeFromTag(targetParent, tagValue, opacityValue, duration) {
-
     targetParent.traverse(child => {
-    if (child.userData.tag === tagValue) {
-            child.material.transparent = true;
-            gsap.to(child.material, { opacity: opacityValue, duration: duration, ease: "power2.inOut" });
+        // Check if userData exists and if the tag matches.
+        if (child.userData && child.userData.tag === tagValue) {
+            // Also ensure that the material exists before modifying it.
+            if (child.material) {
+                child.material.transparent = true;
+                gsap.to(child.material, { 
+                    opacity: opacityValue, 
+                    duration: duration, 
+                    ease: "power2.inOut" 
+                });
+            }
         }
     });
 }
