@@ -57,6 +57,7 @@ export function createScene() {
 
     // Create renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
@@ -229,7 +230,7 @@ export function createScene() {
         // Hacky solution. Not very smooth but good enough for rock.
         // Update stack Y position to match the chosen box if in state 5 or 6
         if (currentState === 4 ) {
-            gsap.to(group.position, { y: group.children[chosenBox].position.y, duration: 1.5});
+            gsap.to(group.position, { y: group.children[chosenBox].position.y, duration: 1});
         } else if (currentState === 5) {
             gsap.to(group.position, { y: group.children[chosenBox].position.y, duration: 0});
         }
