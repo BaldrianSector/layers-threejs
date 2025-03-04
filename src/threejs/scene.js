@@ -138,11 +138,11 @@ export function createScene() {
     
     // Create 3D objects
     const houseGroup = new THREE.Group();    
-    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 190, { x: 0.35, y: 0.1, z: 0 }, (object) => {houseGroup.add(object);});
-    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 10, { x: 0.8, y: 0.1, z: 0.6 }, (object) => {houseGroup.add(object);});
-    create3DObject('src/assets/3d_models/SmallHouse_blue.glb', 0.1, 190, { x: 0, y: 0.1, z: 1.3 }, (object) => {houseGroup.add(object);});
-    create3DObject('src/assets/3d_models/SmallHouse_blue.glb', 0.1, 10, { x: -0.1, y: 0.1, z: -0.7 }, (object) => {houseGroup.add(object);});
-    create3DObject('src/assets/3d_models/SmallHouse_green.glb', 0.1, 10, { x: 1, y: 0.1, z: -0.3 }, (object) => {houseGroup.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 190, { x: -0.8, y: 0.1, z: 0 }, (object) => {houseGroup.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_red.glb', 0.1, 10, { x: 0.8, y: 0.1, z: 0.3 }, (object) => {houseGroup.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_blue.glb', 0.1, 190, { x: 1, y: 0.1, z: 1.3 }, (object) => {houseGroup.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_blue.glb', 0.1, 10, { x: -0.4, y: 0.1, z: -0.7 }, (object) => {houseGroup.add(object);});
+    create3DObject('src/assets/3d_models/SmallHouse_green.glb', 0.1, 10, { x: 0.6, y: 0.1, z: -0.3 }, (object) => {houseGroup.add(object);});
 
     layer4.add(houseGroup);
 
