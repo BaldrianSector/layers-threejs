@@ -6,11 +6,11 @@ import { createCamera } from './camera.js';
 import { handleResize } from './resizeHandler.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { createTextMesh, createHeaderTextMesh } from './createTextMesh.js';
+import { createLine } from './createLine.js';
 import { gsap } from "gsap";    
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { TextPlugin } from "gsap/TextPlugin";
-import { time } from 'three/tsl';
 
 gsap.registerPlugin(ScrollTrigger,ScrollToPlugin,TextPlugin);
 
@@ -119,7 +119,7 @@ export function createScene() {
         const boxMesh = new THREE.Mesh(geometry, material);
         return boxMesh;
     }    
-
+    
     const layer1 = createBox(12);  // White ice
     const layer2 = createBox(3);   // Satelite
     const layer3 = createBox(4);   // Map
@@ -159,20 +159,24 @@ export function createScene() {
     // createTextMesh(group, 'Greenland has a variety of minerals that are of global interest.', 0.1, 0.1, 0.01, 900, false);
     // createTextMesh(group, 'Some italic text would look like this', 0.1, 0.1, 0.01, 500, true);
 
-    // // Create text with a different font
-    // createHeaderTextMesh(group, 'Greenland', 0.5, 0.1, 0.01, true);
+    // Create text with a different font
+    createHeaderTextMesh(group, 'Greenland', 0.5, 0.1, 0.01, true);
     
     // Create a dashed line
-
-    // For now this is just a fixed line between two points, but it should scale with the text and target object
-    const dashedMaterial = new THREE.LineDashedMaterial( { color: 0xffffff, dashSize: 0.1, gapSize: 0.1 } )
-    const points = [];
-    points.push(new THREE.Vector3(1.2, 0, -2.2));
-    points.push(new THREE.Vector3(1.2, 0, -8.86));
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-
-    const line = new THREE.Line(lineGeometry, dashedMaterial);
-    line.computeLineDistances();
+    createTextMesh(layer1, 'Layer1', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer2, 'Layer2', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer3, 'Layer3', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer4, 'Layer4', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer5, 'Layer5', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer6, 'Layer6', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createTextMesh(layer7, 'Layer7', 0.1, 0.1, 0.01, 900, false, { x: 1.2, y: 0.1, z: -3 }, {tag: "text"});
+    createLine(layer1, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
+    createLine(layer2, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
+    createLine(layer3, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
+    createLine(layer4, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
+    createLine(layer5, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
+    createLine(layer6, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
+    createLine(layer7, 0.1, 0.1, { x: 1.2, y: 0, z: -2.2 }, { x: 1.2, y: 0, z: -6.86 }, {tag: "title"});
     
     // const layer2 = new THREE.Group();
     // layer2.add(line);
@@ -203,6 +207,7 @@ export function createScene() {
         if (event.key === 'ArrowUp' && chosenBox > 0) {
             chosenBox--;
         }
+
     });
     
     // Box chosen
@@ -217,12 +222,12 @@ export function createScene() {
         renderer.render(scene, camera);
         
         controls.update();
-
+        
         // Apply spacing to X, Y, and Z axes
         spaceElements(group, 'x', groupData.spacingX);
         spaceElements(group, 'y', groupData.spacingY);
         spaceElements(group, 'z', groupData.spacingZ);
-    
+        
         // Update group's scale and rotation based on groupData
         group.scale.set(groupData.scale, groupData.scale, groupData.scale);
         group.rotation.y = groupData.rotation;
@@ -260,6 +265,8 @@ export function createScene() {
                 camera.updateProjectionMatrix();
             }
         });
+
+        opacityChangeFromTag(group, "title", 0, 0);
     }
     
     // Soloing out
@@ -314,6 +321,8 @@ export function createScene() {
         // Reset group Y position
         gsap.to(group.position, { y: 0, duration: 3 });
 
+        // Fade out titles
+        opacityChangeFromTag(group, "text", 0, 1.5);
     }
     
     // Individual scroll
@@ -333,7 +342,10 @@ export function createScene() {
         gsap.to(group.position, { z: 1.2, duration: 3 });
 
         // Fade in houses
-        opacityChange(houseGroup, 1, 3);        
+        opacityChange(houseGroup, 1, 3);
+        
+        // Fade in titles
+        opacityChangeFromTag(group, "text", 1, 1.5);
     }
     
     // Individual near + text
@@ -355,6 +367,9 @@ export function createScene() {
         
         // Fade in houses
         opacityChange(houseGroup, 1, 1.5);
+
+        // Fade in titles
+        opacityChangeFromTag(group, "text", 1, 1.5);
     }
 
     // End
@@ -378,6 +393,9 @@ export function createScene() {
         
         // Fade out houses
         opacityChange(houseGroup, 0, 2.5);
+
+        // Fade out titles
+        opacityChangeFromTag(group, "text", 0, 1.5);
     }
 }
 
@@ -455,6 +473,16 @@ function dtr(degrees) {
 function opacityChange(targetParent, opacityValue, duration) {
     targetParent.traverse(child => {
         if (child.isMesh) {
+            child.material.transparent = true;
+            gsap.to(child.material, { opacity: opacityValue, duration: duration, ease: "power2.inOut" });
+        }
+    });
+}
+
+function opacityChangeFromTag(targetParent, tagValue, opacityValue, duration) {
+
+    targetParent.traverse(child => {
+    if (child.userData.tag === tagValue) {
             child.material.transparent = true;
             gsap.to(child.material, { opacity: opacityValue, duration: duration, ease: "power2.inOut" });
         }

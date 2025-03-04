@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { TTFLoader, FontLoader, TextGeometry } from 'three/examples/jsm/Addons.js';
+import { materialOpacity } from 'three/tsl';
 
-export function createHeaderTextMesh(group, textInput, size = 1, height = 0.1, depth = 0.01, position = { x: 0, y: 0, z: 0 }) {
+export function createHeaderTextMesh(group, textInput, size = 1, height = 0.1, depth = 0.01, position = { x: 0, y: 0, z: 0 }, customData) {
     const ttfLoader = new TTFLoader();
     const fontLoader = new FontLoader();
 
@@ -24,11 +25,13 @@ export function createHeaderTextMesh(group, textInput, size = 1, height = 0.1, d
 
         textMesh.position.set(position.x, position.y, position.z);
 
+        textMesh.userData = customData;
+
         group.add(textMesh);
     });
 }
 
-export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth = 0.01, weight = 400, italic = false, position = { x: 0, y: 0, z: 0 }) {
+export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth = 0.01, weight = 400, italic = false, position = { x: 0, y: 0, z: 0 }, customData) {
     const ttfLoader = new TTFLoader();
     const fontLoader = new FontLoader();
 
@@ -99,6 +102,12 @@ export function createTextMesh(group, textInput, size = 0.5, height = 0.1, depth
 
         // Set the position of the text mesh
         textMesh.position.set(position.x, position.y, position.z);
+        
+        // Set to transparent
+        textMaterial.transparent = true;
+        textMaterial.opacity = 0.0;
+        
+        textMesh.userData = customData;
 
         group.add(textMesh);
     });
